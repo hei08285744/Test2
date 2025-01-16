@@ -5145,6 +5145,32 @@ card-draft
   width: auto;
   background-color: transparent;
   --distance: -40px;
+  display: relative;
+  /*----Flip animation----*/
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+
+.card-draft:hover{
+  /*----Flip animation----*/
+  transform: rotateY( 180deg ) ;
+  transition: transform 0.5s;
+}
+
+.front, .back{
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.front{
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+}
+
+.back {
+  transform: rotateY( 180deg );
+  transition: transform 1s;
 }
 
 .card-1{
@@ -5177,6 +5203,10 @@ card-draft
   border-radius: 10px;
   border: 3px solid #000000;
   padding: 1rem;
+}
+
+.card-1:hover{
+  
 }
 
 
@@ -5399,6 +5429,45 @@ liquid effect
     background-size: 100% 100%;
   }
 }
+
+/*---------------------------------------------------------------------------------------------------
+marquee text
+------------------------------------------------------------------------------------------------------*/
+.marquee-text {
+  overflow: clip;
+}
+
+
+.marquee-text-track {
+  display: flex;
+  padding-left: 4.8rem;
+  gap: 4.8rem;
+  width: max-content;
+  animation: marquee-move-text var(--speed, 10s) linear infinite var(
+      --direction,
+      forwards
+    );
+
+}
+
+
+.marquee-text p {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  border: 4px solid black;
+  background-color: wheat;
+  border-radius: 999px;
+  padding: 1rem 2.5rem;
+}
+
+
+@keyframes marquee-move-text {
+  to {
+    transform: translateX(-30%);
+  }
+
+}
+
 
 /*---------------------------------------------------------------------------------------------------
 card
@@ -11785,9 +11854,10 @@ textarea.form-control {
 
 .header {
   position: relative;
-  height: 30vh;
+  height: 60vh;
   min-height: 500px;
-  background: url(../imgs/sand-textures-background.jpg) no-repeat center center fixed;
+  background: url(../imgs/navy-gradient.png) no-repeat center center fixed;
+  /*background-color: #071c39;*/
   background-size: cover;
   overflow: hidden;
 }
@@ -11853,6 +11923,29 @@ textarea.form-control {
 .header .shape svg path {
   fill: #fff;
 }
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  background-color: #FFE0AF;
+  background-image:
+  linear-gradient(45deg, #FFDD88 25%, transparent 25%, transparent 75%, #FFDD88 75%, #FFDD88), 
+  linear-gradient(45deg, #FFDD88 25%, transparent 25%, transparent 75%, #FFDD88 75%, #FFDD88),
+  linear-gradient(45deg, transparent, transparent 50%, #FFC87F 50%, #FFC87F);
+  background-size: 100px 100px;
+  background-position: 0 0, 50px 50px, 50px 0px;
+  -webkit-animation: scroll 5s linear infinite;
+}
+
+@-webkit-keyframes scroll {
+  from { background-position: 0 0, 50px 50px, 50px 0; }
+  to { background-position: -100px -100px, -50px -50px, -50px -100px; }
+}
+
 
 @media (max-width: 1199.98px) {
   .header .shape svg {
@@ -12096,7 +12189,7 @@ animated background
 
 .section.has-img-bg {
   position: relative;
-  background: url(../imgs/section.jpg) no-repeat center top fixed;
+  /*background: url(../imgs/section.jpg) no-repeat center top fixed;*/
   background-size: cover;
   color: #fff;
 }
