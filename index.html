@@ -11,30 +11,41 @@
     <!-- Bootstrap + LeadMark main styles -->
 	<link rel="stylesheet" href="assets/css/leadmark.css">
     <link href="https://fonts.cdnfonts.com/css/handwriting" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
     <!-- page Navigation -->
-    <nav class="navbar custom-navbar navbar-expand-md navbar-light fixed-top" data-spy="affix" data-offset-top="10">
-        <div class="container">
+    <nav class="navbar custom-navbar fixed-top" data-spy="affix" data-offset-top="10">
+        <div class="container">  
             <a class="navbar-brand" href="#">
                 <img src="assets/imgs/Joysick logo.png" alt="">
             </a>
-            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">                                       
-                    <li class="nav-item">
-                        <a class="nav-link btn rounded" href="#about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn rounded" href="#work">Work</a>
-                    </li>             
-                    <li class="nav-item">
-                        <a class="nav-link btn rounded" href="#contact">Contact</a>
-                    </li>
-                </ul>
+        
+            <div class="container-navbar nav-container">       
+                <div onclick="Dropmenu()" class="hamburger-lines navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="line line1" id="line1"></span>
+                  <span class="line line2" id="line2"></span>
+                  <span class="line line3" id="line3"></span>
+                </div>  
+                <input class="checkbox" type="checkbox" name="" id="checkboxid" />
+
+                
+                <div class="menu-items collapse navbar-collapse" id ="navbarSupportedContent">        
+                    <ul class="shadow-button-set navbar-nav">
+                        <li class="nav-item">        
+                            <button><a class="nav-link" href="#about"><small>01. </small>About</a></button>
+                        </li>
+                        <li class="nav-item">
+                            <button><a class="nav-link" href="#work"><small>02. </small>Work</a></button>
+                        </li>
+                        <li class="nav-item">
+                            <button><a class="nav-link" href="#contact"><small>03. </small>Contact</a></button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -42,19 +53,38 @@
 
     <!-- Page Header -->
     <header class="header">
+        <div class="wrapper">
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+            <div><span class="dot"></span></div>
+        </div>
+        <div class="overlay">
+            <div class="container-liquid">
+                <div class="liquid-shape"></div>
+            </div>
+        </div>
         <div class="overlay">
             <h1 class="subtitle"></h1>
             <h1 class="title">JOYSICK STUDIO</h1>  
-        </div>  
-        <div class="container-liquid">
-            <div class="liquid-shape"></div>
         </div>
         <div class="shape">
             <svg viewBox="0 0 1500 200">
                 <path d="m 0,240 h 1500.4828 v -71.92164 c 0,0 -286.2763,-81.79324 -743.19024,-81.79324 C 300.37862,86.28512 0,168.07836 0,168.07836 Z"/>
             </svg>
         </div>
-        <div class="mouse-icon"><div class="wheel"></div></div>
+        <!-- <div class="mouse-icon"><div class="wheel"></div></div> -->
     </header>
     <!-- End Of Page Header -->
 
@@ -64,6 +94,7 @@
             <h6 class="section-title text-center">About</h6>
             <h6 class="section-subtitle text-center mb-5 pb-3">Voluptates architecto provident deserunt.</h6>
         </div>
+        
         <div class="cards-draft">
             <div class="card-draft">
                 <div class="front">
