@@ -642,7 +642,9 @@ pre code {
   background-color: rgb(243, 255, 76);
 }
 
-
+/*------------------------------------------------------------------------------
+header Container media
+-------------------------------------------------------------------------------*/
 
 @media (min-width: 576px) {
   .container {
@@ -5294,6 +5296,98 @@ old Navbar media query
 /*---------------------------------------------------------------------------------------------------
 card-draft
 ------------------------------------------------------------------------------------------------------*/
+.wrapper-card {
+  max-width: 1100px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: auto;
+}
+
+.wrapper-card i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  height: 50px;
+  width: 50px;
+  background: #fff;
+  border: 3px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  line-height: 50px;
+  text-align: center;
+  transition: 0.3s ease;
+  z-index: 99;
+}
+
+.wrapper-card i:first-child {
+  left: 2px;
+}
+
+.wrapper-card i:last-child {
+  right: 2px;
+}
+
+.wrapper-card i:active {
+  transform: translateY(-50%) scale(0.85);
+}
+
+.wrapper-card .cards-carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% / 3) - 150px);
+  gap: 1px;
+  border-radius: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.wrapper-card .cards-carousel .no-transition {
+  scroll-behavior: auto;
+}
+
+.wrapper-card .cards-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.wrapper-card .cards-carousel.dragging {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
+.wrapper-card .cards-carousel .card {
+  scroll-snap-align: start;
+  height: 450px;
+  background: transparent;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 0px solid transparent;
+  margin: auto;
+}
+
+.wrapper-card .cards-carousel .dragging .card {
+  user-select: none;
+  cursor: grab;
+}
+
+@media (max-width: 900px) {
+  .wrapper-card .cards-carousel {
+    grid-auto-columns: calc((100% / 2) - 150px);
+  }
+}
+
+@media (max-width: 600px) {
+  .wrapper-card .cards-carousel {
+    grid-auto-columns: calc((100% / 2) - 150px);
+  }
+}
+
 
 .cards-draft {
   display: flex;
