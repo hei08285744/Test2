@@ -14,6 +14,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
+    <!--font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+	<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Isotope -->
+    <script src="assets/vendors/isotope/isotope.pkgd.js"></script>
+
+    <!-- LeadMark js -->
+    <script src="assets/js/leadmark.js"></script>
+
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
@@ -94,61 +109,70 @@
             <h6 class="section-title text-center">About</h6>
             <h6 class="section-subtitle text-center mb-5 pb-3">Voluptates architecto provident deserunt.</h6>
         </div>
-        
-        <div class="cards-draft">
-            <div class="card-draft">
-                <div class="front">
+        <div class="wrapper-card">
+            <i class="fas fa-angle-left" id="left"></i>
+            <ul class="cards-carousel">       
+                <li class="card">
                     <div class="card-1">
                         <h1>Hello</h1>
                         <div class ="card-1-container">
-                            <p>card 1</p>
                         </div>
                     </div>
-                </div>
-                <div class="back"></div>
-            </div>
-            <div class="card-draft">
-                <div class="front">
+                </li>
+                <li class="card">
                     <div class="card-2">
                         <h1>Hello</h1>
-                        <p>card 2</p>
                     </div>
-                </div>
-                <div class="back"></div>
-            </div>
-            <div class="card-draft">
-                <div class="front">
+                </li>
+                <li class="card">
                     <div class="card-3">
                         <h1>Hello</h1>
                         <div class ="card-3-container">
-                            <p>card 3 </p>
                         </div>
                     </div>
-                </div>
-                <div class="back"></div>
-            </div>
-            <div class="card-draft">
-                <div class="front">
+                </li>
+                <li class="card">
                     <div class="card-4">
                         <h1>Hello</h1>
-                        <p>card 4</p>
                     </div>
-                </div>
-                <div class="back"></div>
-            </div>
-            <div class="card-draft">
-                <div class="front">
+                </li>
+                <li class="card">
                     <div class="card-5">
                         <h1>Hello</h1>
                         <div class ="card-5-container">
-                            <p>card 5</p>
                         </div>
                     </div>
-                </div>
-                <div class="back"></div>
-            </div>
+                </li>
+                <li class="card">
+                    <div class="card-3">
+                        <h1>Hello</h1>
+                        <div class ="card-3-container">
+                        </div>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-4">
+                        <h1>Hello</h1>
+                        <div class ="card-4-container">
+                        </div>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-1">
+                        <h1>Hello</h1>
+                        <div class ="card-1-container">
+                        </div>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="card-2">
+                        <h1>Hello</h1>         
+                    </div>
+                </li>
+            </ul>
+            <i class="fas fa-angle-right" id="right"></i>
         </div><br><br>
-
+    
         <div class="marquee-text">
             <div class="marquee-text-track">
               <p>JavaScript</p>
@@ -422,59 +446,6 @@
     </section>
     <!-- End of Blog Section -->
 
-    <!-- Testmonial Section -->
-    <section class="section" id="testmonial">
-        <div class="container">
-            <h6 class="section-title text-center mb-0">Testmonials</h6>
-            <h6 class="section-subtitle mb-5 text-center">What Our Clients Says</h6>
-            <div class="row">
-                <div class="col-md-4 my-3 my-md-0">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="media align-items-center mb-3">
-                                <img class="mr-3" src="assets/imgs/avatar.jpg" alt="">
-                                <div class="media-body">
-                                    <h6 class="mt-1 mb-0">John Doe</h6>
-                                    <small class="text-muted mb-0">Business Analyst</small>     
-                                </div>
-                            </div>
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus enim modi, id dicta reiciendis itaque.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 my-3 my-md-0">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="media align-items-center mb-3">
-                                <img class="mr-3" src="assets/imgs/avatar-1.jpg" alt="">
-                                <div class="media-body">
-                                    <h6 class="mt-1 mb-0">Maria Garcia</h6>
-                                    <small class="text-muted mb-0">Insurance Agent</small>      
-                                </div>
-                            </div>
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus enim modi, id dicta reiciendis itaque.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 my-3 my-md-0">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="media align-items-center mb-3">
-                                <img class="mr-3" src="assets/imgs/avatar-2.jpg" alt="">
-                                <div class="media-body">
-                                    <h6 class="mt-1 mb-0">Mason Miller</h6>
-                                    <small class="text-muted mb-0">Residential Appraiser</small>        
-                                </div>
-                            </div>
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus enim modi, id dicta reiciendis itaque.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End of Testmonial Section -->
-
     <!-- Contact Section -->
     <section id="contact" class="section has-img-bg pb-0">
         <div class="container">
@@ -521,19 +492,5 @@
             <!-- End of Page Footer -->  
         </div>
     </section>
-	
-	<!-- core  -->
-    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
-    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
-
-    <!-- bootstrap 3 affix -->
-	<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
-
-    <!-- Isotope -->
-    <script src="assets/vendors/isotope/isotope.pkgd.js"></script>
-
-    <!-- LeadMark js -->
-    <script src="assets/js/leadmark.js"></script>
-
 </body>
 </html>
