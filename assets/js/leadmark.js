@@ -1,16 +1,3 @@
-/*!
-=========================================================
-* LeadMark Landing page
-=========================================================
-
-* Copyright: 2019 DevCRUD (https://devcrud.com)
-* Licensed: (https://devcrud.com/licenses)
-* Coded by www.devcrud.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 // smooth scroll
 $(document).ready(function(){
@@ -30,6 +17,28 @@ $(document).ready(function(){
         } 
     });
 });
+
+//drop menu
+function Dropmenu() {
+    var x = document.getElementById("navbarSupportedContent");
+    var y = document.getElementById("checkboxid");
+    var line1 = document.getElementById("line1");
+    var line2 = document.getElementById("line2");
+    var line3 = document.getElementById("line3");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        y.checked = true;
+        line1.style.transform = "rotate(45deg)";
+        line2.style.transform = "scaleY(0)";
+        line3.style.transform = "rotate(-45deg)";
+    } else {
+        x.style.display = "none";
+        y.checked = false;
+        line1.style.transform = "rotate(0)";
+        line2.style.transform = "scaleY(1)";
+        line3.style.transform = "rotate(0)";
+    }
+} 
 
 // protfolio filters
 $(window).on("load", function() {
