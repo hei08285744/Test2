@@ -4,10 +4,10 @@ var x = 0;
     function ChangeImage() {
         const image = document.getElementById('img-joysick');
         if (x == 0){
-            image.src = 'assets/imgs/Animated-logo.gif';
+            image.src = 'assets/imgs/Logo-animation.gif';
             x = 1;
         }else{
-            image.src = 'assets/imgs/Animated-logo-idle.png';
+            image.src = 'assets/imgs/Logo-idle.png';
             x = 0;
         } 
     }
