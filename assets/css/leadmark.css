@@ -635,6 +635,18 @@ pre code {
 .container-work{
   width: auto;
   height: auto;
+  padding: 80px 0;
+}
+
+.circle {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 30px;
+  background: #c6fe43;
+  border-radius: 50%
 }
 
 .flower {
@@ -5369,6 +5381,125 @@ old Navbar media query
 }
 
 /*---------------------------------------------------------------------------------------------------
+about
+------------------------------------------------------------------------------------------------------*/
+.container-about{
+  width: 600px;
+  display: grid;
+  place-items: center;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.section .section-subtitle {
+  font-size: calc(18px + (13 - 13) * ((100vw - 320px) / (1200 - 320)));
+  font-family: "Syne Mono", serif;
+  font-weight: 500;
+  margin-bottom: 0px;
+  opacity: .9;
+}
+
+.section .section-title {
+  font-size: calc(50px + (30 - 20) * ((100vw - 320px) / (1200 - 320)));
+  padding-bottom: 7px;
+  font-weight: 600;
+  font-family: 'Handwriting', sans-serif;
+}
+
+.section .components-section-title {
+  font-size: calc(18px + (23 - 18) * ((100vw - 320px) / (1200 - 320)));
+  margin-bottom: 15px;
+}
+
+@media (min-width: 992px) {
+  .section .components-section-title {
+    font-size: 23px;
+  }
+}
+
+.avatar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 300px;
+}
+
+.typing-demo {
+  width: 18ch;
+  animation: typing 6s steps(31), blink .5s infinite;
+  animation-iteration-count: infinite;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 5px solid;
+  font-family: "Syne Mono", serif;
+  background-color: #000;
+  color: white;
+  font-size: 1.4em;
+}
+
+@keyframes typing {
+  0%{
+      width: 0%;
+  }
+  50%, 100% {
+    width: 100%;
+  }
+ 
+}
+    
+@keyframes blink {
+  50% {
+    border-color: transparent
+  }
+}
+
+@media (max-width: 600px) {
+  .avatar{
+    width: 200px;
+  }
+
+  .container-about{
+    width: 400px;
+  }
+
+  .typing-demo{
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 500.98px) {
+  .avatar{
+    width: 200px;
+  }
+
+  .container-about{
+    width: 400px;
+  }
+
+  .typing-demo{
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 414px) {
+  .avatar{
+    width: 200px;
+  }
+
+  .container-about{
+    width: 320px;
+  }
+
+  .typing-demo{
+    font-size: 0.8em;
+  }
+}
+
+
+/*---------------------------------------------------------------------------------------------------
 card-draft
 ------------------------------------------------------------------------------------------------------*/
 
@@ -5821,39 +5952,79 @@ liquid effect
 /*---------------------------------------------------------------------------------------------------
 marquee text
 ------------------------------------------------------------------------------------------------------*/
-.marquee-text {
-  overflow: clip;
+/*Marquee stile*/
+.marquee{
+  background: #0A532C;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
 }
-
-
-.marquee-text-track {
+.marquee .scroll{
+  width: 100%;
   display: flex;
-  padding-left: 4.8rem;
-  gap: 4.8rem;
-  width: max-content;
-  animation: marquee-move-text var(--speed, 10s) linear infinite var(
-      --direction,
-      forwards
-    );
+}
+.marquee .scroll div{
+  color: #fff;
+  font-size: 35px;
+  background: #0A532C;
+  white-space: nowrap;
+  font-weight: 500;
+  animation: animate-marquee 80s linear infinite;
+  animation-delay: -40s;
+  padding-top: 20px;
+}
+.marquee .scroll div:nth-child(2){
+  animation: animate-marquee-2 80s linear infinite;
+  animation-delay: -80s;
+}
+.marquee .scroll div .category{
+  padding: 10px 30px;
+}
+.category{
+  color: #fff;
+  font-size: 35px;
+  font-weight: 600!important;
+  clear: both;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 20px;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+.category a{color:#FFF;text-decoration: none;}
 
+/*Responsive marquee*/
+@media (max-width:767px){
+  .category{font-size: 25px;}
+  .marquee .scroll div{font-size: 25px;}
 }
 
-
-.marquee-text p {
-  font-family: "Syne Mono", serif;
-  font-size: 20px;
-  border: 4px solid black;
-  background-color: wheat;
-  border-radius: 999px;
-  padding: 1rem 2.5rem;
+@keyframes animate-marquee{
+	0%{
+		-moz-transform: translateX(100%);
+		-webkit-transform: translateX(100%);
+		transform: translateX(100%);
+	}
+	100%{
+		-moz-transform: translateX(-100%);
+		-webkit-transform: translateX(-100%);
+		transform: translateX(-100%);
+	}
 }
 
-
-@keyframes marquee-move-text {
-  to {
-    transform: translateX(-30%);
-  }
-
+@keyframes animate-marquee-2{
+	0%{
+		-moz-transform: translateX(0%);
+		-webkit-transform: translateX(0%);
+		transform: translateX(0%);
+	}
+	100%{
+		-moz-transform: translateX(-200%);
+		-webkit-transform: translateX(-200%);
+		transform: translateX(-200%);
+	}
 }
 
 
@@ -12300,6 +12471,10 @@ textarea.form-control {
   justify-content: center;
 }
 
+.header .overlay .overlay-title{
+
+}
+
 #img-joysick{
   width: 1300px;
   height: 1500px;
@@ -12325,6 +12500,10 @@ textarea.form-control {
   .header .overlay .title{
     font-size: calc(60px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
   }
+
+  .header .overlay .overlay-title{
+    width: 500px;
+  }
 }
 
 @media (max-width: 500.98px) {
@@ -12336,6 +12515,10 @@ textarea.form-control {
   .header .overlay .title{
     font-size: calc(50px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
   }
+
+  .header .overlay .overlay-title{
+    width: 400px;
+  }
 }
 
 @media (max-width: 414px) {
@@ -12346,6 +12529,10 @@ textarea.form-control {
 
   .header .overlay .title{
     font-size: calc(45px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
+  }
+
+  .header .overlay .overlay-title{
+    width: 350px;
   }
 }
 
@@ -12359,6 +12546,7 @@ textarea.form-control {
 
 .header .shape svg path {
   fill: #fff;
+  border: 0px, solid, transparent;
 }
 
 .wrapper {
@@ -12480,19 +12668,19 @@ div .dot {
 
 @media (max-width: 767.98px) {
   .header .shape svg {
-    bottom: 0;
+    /*bottom: 0;*/
   }
 }
 
 @media (max-width: 500.98px) {
   .header .shape svg {
-    bottom: 0;
+    /*bottom: 0;*/
   }
 }
 
 @media (max-width: 414px) {
   .header .shape svg {
-    bottom: 0;
+    /*bottom: 0;*/
   }
 }
 
@@ -12571,10 +12759,12 @@ animated background
 }
 
 .section {
-  padding: 80px 0;
+  padding: 0px 0;
 }
 
-
+.section-work {
+  padding: 40px 0;
+}
 
 .section .work{
   width: auto;
@@ -12646,31 +12836,6 @@ animated background
 .section.py-lg {
   padding-top: 140px !important;
   padding-bottom: 140px !important;
-}
-
-.section .section-subtitle {
-  font-size: calc(13px + (13 - 13) * ((100vw - 320px) / (1200 - 320)));
-  font-weight: 500;
-  margin-bottom: 0px;
-  opacity: .9;
-}
-
-.section .section-title {
-  font-size: calc(100px + (30 - 20) * ((100vw - 320px) / (1200 - 320)));
-  padding-bottom: 7px;
-  font-weight: 600;
-  font-family: 'Handwriting', sans-serif;
-}
-
-.section .components-section-title {
-  font-size: calc(18px + (23 - 18) * ((100vw - 320px) / (1200 - 320)));
-  margin-bottom: 15px;
-}
-
-@media (min-width: 992px) {
-  .section .components-section-title {
-    font-size: 23px;
-  }
 }
 
 .section .section-secondary-title {
