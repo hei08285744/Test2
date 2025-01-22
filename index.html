@@ -33,12 +33,15 @@
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
     <!-- page Navigation -->
-    <nav class="navbar custom-navbar fixed-top" data-spy="affix" data-offset-top="10">
+    <nav class="navbar custom-navbar navbar-expand-md fixed-top" data-spy="affix" data-offset-top="10">
         <div class="container">  
-            <a class="navbar-brand" href="#">
-                <img src="assets/imgs/Joysick logo.png" alt="">
-            </a>
-        
+            <div class="logo-container">
+                <a class="navbar-brand" href="#">
+                    <div class="logo-title"><h6>longhei.sit@gmail.com</h6></div>
+                    <!--<img src="assets/imgs/Joysick logo.png" alt="">-->
+                </a>
+            </div>
+
             <div class="container-navbar nav-container">       
                 <div onclick="Dropmenu()" class="hamburger-lines navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="line line1" id="line1"></span>
@@ -49,7 +52,7 @@
 
                 
                 <div class="menu-items collapse navbar-collapse" id ="navbarSupportedContent">        
-                    <ul class="shadow-button-set navbar-nav">
+                    <ul class="shadow-button-set navbar-nav ml-auto">
                         <li class="nav-item">        
                             <button><a class="nav-link" href="#about"><small>01. </small>About</a></button>
                         </li>
@@ -68,7 +71,7 @@
 
     <!-- Page Header -->
     <header class="header">
-        <div class="wrapper">
+        <!--<div class="wrapper">
             <div><span class="dot"></span></div>
             <div><span class="dot"></span></div>
             <div><span class="dot"></span></div>
@@ -84,16 +87,41 @@
             <div><span class="dot"></span></div>
             <div><span class="dot"></span></div>
             <div><span class="dot"></span></div>
-        </div>
-        <div class="overlay">
+        </div>-->
+
+       
+        <!--<div class="overlay">
             <div class="container-liquid">
                 <div class="liquid-shape"></div>
             </div>
+        </div>-->
+
+        <div id="container-circular-text">
+            <div id="circle">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve">
+                    <defs>
+                        <path id="circlePath" d="M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
+                    </defs>
+                    <circle cx="150" cy="100" r="75" fill="none"/>
+                    <g>
+                        <use xlink:href="#circlePath" fill="none"/>
+                        <text fill="#000">
+                            <textPath xlink:href="#circlePath">Click me! Click me! Click me! Click me! Click me! Click me! Click me! Click me! Click me! Click me! </textPath>
+                        </text>
+                    </g>
+                </svg>
+            </div>
         </div>
+
         <div class="overlay">
             <h1 class="subtitle"></h1>
             <h1 class="title">JOYSICK STUDIO</h1>  
         </div>
+
+        <div class="overlay">
+            <img id="img-joysick" src="assets/imgs/Animated-logo-idle.png" onclick="ChangeImage()" alt="">           
+        </div>
+
         <div class="shape">
             <svg viewBox="0 0 1500 200">
                 <path d="m 0,240 h 1500.4828 v -71.92164 c 0,0 -286.2763,-81.79324 -743.19024,-81.79324 C 300.37862,86.28512 0,168.07836 0,168.07836 Z"/>
@@ -172,7 +200,7 @@
             </ul>
             <i class="fas fa-angle-right" id="right"></i>
         </div><br><br>
-    
+
         <div class="marquee-text">
             <div class="marquee-text-track">
               <p>JavaScript</p>
