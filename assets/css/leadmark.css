@@ -114,6 +114,7 @@ ul,
 dl {
   margin-top: 0;
   margin-bottom: 1rem;
+
 }
 
 ol ol,
@@ -559,6 +560,10 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+}
+
+.container .logo-title{
+  font-family: "Syne Mono", serif;
 }
 
 .container-services{
@@ -3516,6 +3521,11 @@ input[type="button"].btn-block {
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .dropdown-menu-left {
@@ -4552,7 +4562,7 @@ Navbar container
 }
 
 .nav-container {
-  display: inline-block;
+  display: inline-flex;
   justify-content: space-between;
   align-items: center;
 }
@@ -4606,6 +4616,8 @@ Navbar container
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: 12px;
+  margin-left: -30px;
 }
 
 .nav-container .hamburger-lines .line {
@@ -4631,7 +4643,8 @@ Navbar container
 }
 
 .container-navbar .menu-items {
-  padding-top: 100px;
+  margin-top: 7px;
+  margin-left: -500px;
   transform: translate(0%);
   display: inline-flex;
   transition: transform 0.5s ease-in-out;
@@ -4850,6 +4863,7 @@ Navbar container
   font-size: 1.25rem;
   line-height: inherit;
   white-space: nowrap;
+  margin-top: 7px;
 }
 
 .navbar-brand:hover, .navbar-brand:focus {
@@ -4891,10 +4905,10 @@ Navbar container
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  -webkit-box-align: right;
-  -webkit-align-items: right;
-      -ms-flex-align: right;
-          align-items: right;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .navbar-toggler {
@@ -4954,6 +4968,7 @@ old Navbar media query
   }
   .navbar-expand-sm .navbar-nav .dropdown-menu {
     position: absolute;
+
   }
   .navbar-expand-sm .navbar-nav .nav-link {
     padding-right: 0.8rem;
@@ -4984,6 +4999,10 @@ old Navbar media query
   .navbar-expand-md > .container-fluid {
     padding-right: 0;
     padding-left: 0;
+  }
+
+  .navbar-expand-md .navbar-collapse{
+    margin-top: 70px
   }
 }
 
@@ -5023,7 +5042,7 @@ old Navbar media query
     display: -webkit-box !important;
     display: -webkit-flex !important;
     display: -ms-flexbox !important;
-    display: flex !important;
+    display: absolute !important;
     -webkit-flex-basis: auto;
         -ms-flex-preferred-size: auto;
             flex-basis: auto;
@@ -5296,12 +5315,14 @@ old Navbar media query
 /*---------------------------------------------------------------------------------------------------
 card-draft
 ------------------------------------------------------------------------------------------------------*/
+
 .wrapper-card {
   max-width: 1100px;
   width: 100%;
   height: 100%;
   position: relative;
   margin: auto;
+  
 }
 
 .wrapper-card i {
@@ -5643,6 +5664,61 @@ card-draft
   transform: rotate(10deg);
   transform-origin: right top 0;
   box-shadow: 7px 7px black;
+}
+
+/*------------------------------------------------------------------------------
+Container circular text
+-------------------------------------------------------------------------------*/
+#container-circular-text { margin: 0%; }
+
+#circle { position: relative; width: 100%; padding-bottom: 100%; overflow: hidden; }
+
+#circle text { font-family: "Syne Mono", serif; font-size: 8px; font-weight: bold; }
+
+#circle svg { position: absolute; left: 0; top: 0; width: 100%; height: 540px;
+
+  -webkit-animation-name: rotate;
+     -moz-animation-name: rotate;
+      -ms-animation-name: rotate;
+       -o-animation-name: rotate;
+          animation-name: rotate;
+  -webkit-animation-duration: 5s;
+     -moz-animation-duration: 5s;
+      -ms-animation-duration: 5s;
+       -o-animation-duration: 5s;
+          animation-duration: 5s;
+  -webkit-animation-iteration-count: infinite;
+     -moz-animation-iteration-count: infinite;
+      -ms-animation-iteration-count: infinite;
+       -o-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+     -moz-animation-timing-function: linear;
+      -ms-animation-timing-function: linear;
+       -o-animation-timing-function: linear;
+          animation-timing-function: linear;
+
+}
+
+@-webkit-keyframes rotate {
+    from { -webkit-transform: rotate(360deg); }
+    to { -webkit-transform: rotate(0); }
+}
+@-moz-keyframes rotate {
+    from { -moz-transform: rotate(360deg); }
+    to { -moz-transform: rotate(0); }
+}
+@-ms-keyframes rotate {
+    from { -ms-transform: rotate(360deg); }
+    to { -ms-transform: rotate(0); }
+}
+@-o-keyframes rotate {
+    from { -o-transform: rotate(360deg); }
+    to { -o-transform: rotate(0); }
+}
+@keyframes rotate {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0); }
 }
 
 /*---------------------------------------------------------------------------------------------------
@@ -9958,7 +10034,7 @@ button.bg-dark:focus {
 
 .ml-auto,
 .mx-auto {
-  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 @media (min-width: 576px) {
@@ -11918,7 +11994,7 @@ textarea.form-control {
 }
 
 .navbar.custom-navbar .nav-link:hover {
-  color: #fff;
+  color: black;
 }
 
 .navbar.custom-navbar.affix {
@@ -12112,7 +12188,7 @@ textarea.form-control {
   position: relative;
   height: 60vh;
   min-height: 500px;
-  background: url(../imgs/navy-gradient.png) no-repeat center center fixed;
+  background: url(../imgs/sand-textures-background.jpg) no-repeat center center fixed;
   /*background-color: #faab91;*/
   background-size: cover;
   overflow: hidden;
@@ -12162,10 +12238,59 @@ textarea.form-control {
   font-family: Franklin Gothic;
   /*font-family: Courier New;*/
   font-style: normal;
-  color: #ffe28f;
+  color: white;
   -webkit-text-stroke: 2px black;
   text-stroke: 2px black;
   justify-content: center;
+}
+
+#img-joysick{
+  width: 1300px;
+  height: 1500px;
+}
+
+@media (max-width: 1199.98px) {
+  .header .shape svg {
+    bottom: -15px;
+  }
+
+  #img-joysick{
+    width: 1300px;
+    height: 1500px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  #img-joysick{
+    width: 1300px;
+    height: 1500px;
+  }
+
+  .header .overlay .title{
+    font-size: calc(60px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
+  }
+}
+
+@media (max-width: 500.98px) {
+  #img-joysick{
+    width: 1000px;
+    height: 1200px;
+  }
+
+  .header .overlay .title{
+    font-size: calc(50px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
+  }
+}
+
+@media (max-width: 414px) {
+  #img-joysick{
+    width: 1000px;
+    height: 1200px;
+  }
+
+  .header .overlay .title{
+    font-size: calc(45px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
+  }
 }
 
 .header .shape svg {
@@ -12301,29 +12426,17 @@ div .dot {
   .header .shape svg {
     bottom: 0;
   }
-
-  .header .overlay .title{
-    font-size: calc(60px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
-  }
 }
 
 @media (max-width: 500.98px) {
   .header .shape svg {
     bottom: 0;
   }
-
-  .header .overlay .title{
-    font-size: calc(50px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
-  }
 }
 
 @media (max-width: 414px) {
   .header .shape svg {
     bottom: 0;
-  }
-
-  .header .overlay .title{
-    font-size: calc(40px + (70 - 30) * ((100vw - 320px) / (1200 - 320)));
   }
 }
 
