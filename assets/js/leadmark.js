@@ -1,3 +1,16 @@
+//animation gif click
+var x = 0;
+
+    function ChangeImage() {
+        const image = document.getElementById('img-joysick');
+        if (x == 0){
+            image.src = 'assets/imgs/Animated-logo.gif';
+            x = 1;
+        }else{
+            image.src = 'assets/imgs/Animated-logo-idle.png';
+            x = 0;
+        } 
+    }
 
 // smooth scroll
 $(document).ready(function(){
@@ -64,9 +77,10 @@ $(window).on("load", function() {
     })
 })
 
+
 //card slider 
 const wrapper =document.querySelector(".wrapper-card");
-const carousel =document.querySelector(".card-carouse");
+const carousel =document.querySelector(".cards-carousel");
 const arrowBtns =document.querySelectorAll(".wrapper-card i");
 const firstCardWidth =carousel.querySelector(".card").offsetWidth;
 const carouselChildrens = [...carousel.children];
@@ -99,6 +113,7 @@ const dragStart = (e) => {
     //Records the initial cursor and scroll position of the carousel
     startX = e.pageX;
     startScrollLeft = carousel.scrollLeft;
+    console.log(e.pageX);
 }
 
 const dragging = (e) => {
@@ -140,6 +155,10 @@ document.addEventListener("mouseup", dragStop);
 carousel.addEventListener("scroll", infiniteScroll);
 wrapper.addEventListener("mouseenter", () => clearTimeout(timeoutId));
 wrapper.addEventListener("mouseleave", autoPlay);
+
+//mouse draggable
+
+
 
 /*//card slider
 let carousel = document.querySelector(".card-carouse");
