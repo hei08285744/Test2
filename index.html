@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
     <!--font awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- core  -->
     <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
     <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
@@ -63,7 +62,10 @@
                             <button><a class="nav-link" href="#work"><small>02. </small>Work</a></button>
                         </li>
                         <li class="nav-item">
-                            <button><a class="nav-link" href="#contact"><small>03. </small>Contact</a></button>
+                            <button><a class="nav-link" href="#game"><small>03. </small>Game</a></button>
+                        </li>
+                        <li class="nav-item">
+                            <button><a class="nav-link" href="#contact"><small>04. </small>Contact</a></button>
                         </li>
                     </ul>
                 </div>
@@ -289,6 +291,263 @@
         </div>
     </section>
     <!-- End OF work Section -->
+
+    <!-- Mini Game Section: 3x3 card stacks -->
+    <section class="section" id="game">
+        <div class="container">
+            <h6 class="section-title text-center">Mini Game</h6>
+            <h6 class="section-subtitle text-center mb-5 pb-3">Nine stacks — 3 × 3 grid</h6>
+
+            <div class="mini-game-wrapper">
+                <div class="player player-top" data-player="0">Player 1
+                    <div class="lives">
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                    </div>
+                    <div class="hand"></div>
+                    <button id="shuffle-btn" class="shuffle-btn">Shuffle</button>
+                </div>
+                <div class="player player-right" data-player="1">Player 2
+                    <div class="lives">
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                    </div>
+                    <div class="hand"></div>
+                </div>
+
+                <div class="mini-game-grid">
+                    <!-- 9 stacks (3x3) -->
+                    <div class="card-stack" data-stack="1" tabindex="0" aria-label="Stack 1">
+                            <div class="card"><span class="emoji">⚔️</span></div>
+                            <div class="card"><span class="emoji">⚔️</span></div>
+                            <div class="card"><span class="emoji">⚔️</span></div>
+                            <div class="card"><span class="emoji">⚔️</span></div>
+                            <div class="card"><span class="emoji">⚔️</span></div>
+                        </div>
+                    <div class="card-stack" data-stack="2" tabindex="0" aria-label="Stack 2">
+                        <div class="card"><span class="emoji">🛡️</span></div>
+                        <div class="card"><span class="emoji">🛡️</span></div>
+                        <div class="card"><span class="emoji">🛡️</span></div>
+                        <div class="card"><span class="emoji">🛡️</span></div>
+                        <div class="card"><span class="emoji">🛡️</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="3" tabindex="0" aria-label="Stack 3">
+                        <div class="card"><span class="emoji">🏰</span></div>
+                        <div class="card"><span class="emoji">🏰</span></div>
+                        <div class="card"><span class="emoji">🏰</span></div>
+                        <div class="card"><span class="emoji">🏰</span></div>
+                        <div class="card"><span class="emoji">🏰</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="4" tabindex="0" aria-label="Stack 4">
+                        <div class="card"><span class="emoji">💰</span></div>
+                        <div class="card"><span class="emoji">💰</span></div>
+                        <div class="card"><span class="emoji">💰</span></div>
+                        <div class="card"><span class="emoji">💰</span></div>
+                        <div class="card"><span class="emoji">💰</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="5" tabindex="0" aria-label="Stack 5">
+                        <div class="card"><span class="emoji">🦺</span></div>
+                        <div class="card"><span class="emoji">🦺</span></div>
+                        <div class="card"><span class="emoji">🦺</span></div>
+                        <div class="card"><span class="emoji">🦺</span></div>
+                        <div class="card"><span class="emoji">🦺</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="6" tabindex="0" aria-label="Stack 6">
+                        <div class="card"><span class="emoji">🛑</span></div>
+                        <div class="card"><span class="emoji">🛑</span></div>
+                        <div class="card"><span class="emoji">🛑</span></div>
+                        <div class="card"><span class="emoji">🛑</span></div>
+                        <div class="card"><span class="emoji">🛑</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="7" tabindex="0" aria-label="Stack 7">
+                        <div class="card"><span class="emoji">🧪</span></div>
+                        <div class="card"><span class="emoji">🧪</span></div>
+                        <div class="card"><span class="emoji">🧪</span></div>
+                        <div class="card"><span class="emoji">🧪</span></div>
+                        <div class="card"><span class="emoji">🧪</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="8" tabindex="0" aria-label="Stack 8">
+                        <div class="card"><span class="emoji">🍞</span></div>
+                        <div class="card"><span class="emoji">🍞</span></div>
+                        <div class="card"><span class="emoji">🍞</span></div>
+                        <div class="card"><span class="emoji">🍞</span></div>
+                        <div class="card"><span class="emoji">🍞</span></div>
+                    </div>
+                    <div class="card-stack" data-stack="9" tabindex="0" aria-label="Stack 9">
+                        <div class="card"><span class="emoji">📦</span></div>
+                        <div class="card"><span class="emoji">📦</span></div>
+                        <div class="card"><span class="emoji">📦</span></div>
+                        <div class="card"><span class="emoji">📦</span></div>
+                        <div class="card"><span class="emoji">📦</span></div>
+                    </div>
+                </div>
+
+                <div class="player player-bottom" data-player="2">Player 3
+                    <div class="lives">
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                    </div>
+                    <div class="hand"></div>
+                </div>
+                <div class="player player-left" data-player="3">Player 4
+                    <div class="lives">
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                        <span class="heart">❤</span>
+                    </div>
+                    <div class="hand"></div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            #mini-game,#game{padding-top:100px;padding-bottom:320px}
+            .mini-game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto 120px;padding:60px 0}
+            .card-stack{position:relative;height:220px;cursor:pointer}
+            .card{position:absolute;left:50%;top:50%;width:140px;height:98px;border-radius:10px;background:#ffffff;box-shadow:0 8px 18px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#333;transform:translate(-50%,-50%);transition:transform .18s ease,box-shadow .18s ease,opacity .25s ease}
+            .card-stack .card:nth-child(1){transform:translate(-50%,-60%) rotate(-4deg);z-index:5}
+            .card-stack .card:nth-child(2){transform:translate(-50%,-30%) rotate(-2deg);z-index:4}
+            .card-stack .card:nth-child(3){transform:translate(-50%,-5%) rotate(0deg);z-index:3}
+            .card-stack .card:nth-child(4){transform:translate(-50%,18%) rotate(2deg);z-index:2}
+            .card-stack .card:nth-child(5){transform:translate(-50%,36%) rotate(4deg);z-index:1}
+            .card-stack:focus .card:nth-child(1),.card-stack:hover .card:nth-child(1){transform:translate(-50%,-100%);box-shadow:0 18px 36px rgba(0,0,0,.22)}
+            .card.removing{pointer-events:none}
+            .card i{font-size:28px;color:#333}
+            .card .emoji{font-size:26px}
+            .mini-game-wrapper{position:relative;padding:60px 140px;min-height:640px}
+            .player{position:absolute;padding:8px 12px;background:rgba(255,255,255,0.95);border-radius:8px;border:1px solid #eee;font-weight:600;display:flex;flex-direction:column;align-items:center;min-width:100px}
+            .player .hand{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+            .player .lives{margin-top:8px;display:flex;gap:6px;justify-content:center}
+            .player .heart{color:#e53935;font-size:16px;line-height:1}
+            .player .heart.lost{opacity:0.25;color:#bdbdbd}
+            .player .hand-card{background:#f3f3f3;border-radius:6px;padding:4px 6px;font-size:12px;box-shadow:0 4px 8px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center}
+            .player .hand-card i{font-size:18px;color:#333}
+            .player-top{left:50%;transform:translateX(-50%);top:12px}
+            .player-bottom{left:50%;transform:translateX(-50%);bottom:12px;top:auto}
+            .player-left{left:12px;top:50%;transform:translateY(-50%)}
+            .player-right{right:12px;top:50%;transform:translateY(-50%)}
+            .player.active{outline:3px solid #ffd54f;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+            .shuffle-btn{display:inline-block;padding:8px 14px;border-radius:6px;border:none;background:#2b7a78;color:#fff;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(43,122,120,.12)}
+            .shuffle-btn:active{transform:translateY(1px)}
+            .player-top .shuffle-btn{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);padding:8px 12px}
+            @media (max-width:768px){
+                .mini-game-grid{grid-template-columns:repeat(2,1fr)}
+                .card{width:120px;height:86px}
+            }
+            @media (max-width:480px){
+                .mini-game-grid{grid-template-columns:repeat(1,1fr)}
+            }
+        </style>
+        <script>
+            (function(){
+                const players = Array.from(document.querySelectorAll('.player'));
+                let currentPlayer = 0;
+
+                function updateActive(){
+                    players.forEach((p,i)=> p.classList.toggle('active', i===currentPlayer));
+                }
+
+                function handCardToPlayer(playerIndex, cardValue){
+                    const hand = players[playerIndex].querySelector('.hand');
+                    const el = document.createElement('div');
+                    el.className = 'hand-card';
+                    if(cardValue instanceof Node){
+                        // append cloned icon into the hand-card
+                        const icon = cardValue.cloneNode(true);
+                        el.appendChild(icon);
+                    } else {
+                        el.textContent = String(cardValue);
+                    }
+                    hand.appendChild(el);
+                }
+
+                function popTop(stack){
+                    const top = stack.querySelector('.card');
+                    if(!top) return;
+                    const iconNode = top.querySelector('i, .emoji');
+                    const value = iconNode || top.textContent.trim();
+                    top.classList.add('removing');
+                    top.style.transform = 'translate(-50%,-140%) scale(.98)';
+                    top.style.opacity = '0';
+                    top.addEventListener('transitionend', function(){ top.remove(); }, {once:true});
+                    handCardToPlayer(currentPlayer, value);
+                    // advance turn
+                    currentPlayer = (currentPlayer + 1) % players.length;
+                    updateActive();
+                }
+
+                // attach handlers
+                document.querySelectorAll('.card-stack').forEach(stack => {
+                    stack.addEventListener('click', () => popTop(stack));
+                    stack.addEventListener('keydown', (e) => {
+                        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); popTop(stack); }
+                    });
+                });
+
+                // expose a small API to modify lives (example usage in console)
+                window.game = window.game || {};
+                window.game.loseLife = function(playerIndex){
+                    const p = players[playerIndex];
+                    if(!p) return;
+                    const hearts = p.querySelectorAll('.heart');
+                    for(let i=hearts.length-1;i>=0;i--){
+                        if(!hearts[i].classList.contains('lost')){ hearts[i].classList.add('lost'); break; }
+                    }
+                };
+                window.game.resetLives = function(){
+                    players.forEach(p=> p.querySelectorAll('.heart').forEach(h=> h.classList.remove('lost')));
+                };
+
+                // shuffle handler
+                const shuffleBtn = document.getElementById('shuffle-btn');
+                if(shuffleBtn){
+                    shuffleBtn.addEventListener('click', () => {
+                        // prepare pool: 9 icons x 5 = 45 cards
+                        const icons = ['⚔️','🛡️','🏰','💰','🦺','🛑','🧪','🍞','📦'];
+                        let pool = [];
+                        icons.forEach(ic => { for(let i=0;i<5;i++) pool.push(ic); });
+                        // Fisher-Yates shuffle
+                        for(let i=pool.length-1;i>0;i--){
+                            const j = Math.floor(Math.random()*(i+1));
+                            [pool[i],pool[j]] = [pool[j],pool[i]];
+                        }
+                        // distribute 5 per stack
+                        const stacks = Array.from(document.querySelectorAll('.card-stack'));
+                        stacks.forEach((stack, idx) => {
+                            // clear existing cards
+                            stack.innerHTML = '';
+                            for(let k=0;k<5;k++){
+                                const v = pool[idx*5 + k];
+                                const d = document.createElement('div');
+                                d.className = 'card';
+                                const span = document.createElement('span');
+                                span.className = 'emoji';
+                                span.textContent = v;
+                                d.appendChild(span);
+                                stack.appendChild(d);
+                            }
+                        });
+                    });
+                }
+
+                // initial state
+                updateActive();
+            })();
+        </script>
+    </section>
+    <!-- End OF Mini Game Section -->
+
 
     <!-- Portfolio Section
     <section id="portfolio" class="section portfolio-section">
