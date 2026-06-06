@@ -14,6 +14,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- p5 and GUI for header animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19/dist/lil-gui.min.js"></script>
     <!--font awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <!-- core  -->
@@ -32,47 +36,196 @@
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
-    <!-- page Navigation -->
-    <nav class="navbar custom-navbar navbar-expand-md fixed-top" data-spy="affix" data-offset-top="10">
-        <div class="container">  
-            <div class="logo-container">
-                <a class="navbar-brand" href="#">
-                    <div class="circle">
-                        <div class="logo-title"><h6>longhei.sit@gmail.com</h6></div>
-                    </div>
-                    <!--<img src="assets/imgs/Joysick logo.png" alt="">-->
-                </a>
+    <!-- page Navigation (merged design) -->
+    <nav class="navbar custom-navbar navbar-expand-md fixed-top merged-nav" data-spy="affix" data-offset-top="10">
+        <div class="container nav-merged-container">  
+            <div class="nav-left">
+                <svg class="brand-svg" width="220" height="48" viewBox="0 0 220 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <filter id="ringGlow" x="-200%" y="-200%" width="500%" height="500%">
+                            <feGaussianBlur stdDeviation="6" result="blur1" />
+                            <feGaussianBlur stdDeviation="12" result="blur2" />
+                            <feMerge>
+                                <feMergeNode in="blur2" />
+                                <feMergeNode in="blur1" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <!-- small neon ring behind JOYSICK, overlays text slightly -->
+                    <circle class="neon-ring" cx="46" cy="24" r="22" stroke="#d6ff00" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#ringGlow)" style="mix-blend-mode:screen;pointer-events:none;animation:brand-pulse 1600ms ease-in-out infinite" />
+                    <!-- JOYSICK text -->
+                    <text x="34" y="28" font-family="handwriting, 'Syne Mono', monospace" font-size="20" font-weight="800" transform="rotate(-4 34 28)" fill="#000">JOYSICK</text>
+                    <!-- STUDIO closer to JOYSICK -->
+                    <text x="110" y="32" font-family="Syne Mono, monospace" font-size="12" font-weight="700" fill="#000">STUDIO</text>
+                </svg>
             </div>
 
-            <div class="container-navbar nav-container">       
-                <div onclick="Dropmenu()" class="hamburger-lines navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="line line1" id="line1"></span>
-                  <span class="line line2" id="line2"></span>
-                  <span class="line line3" id="line3"></span>
-                </div>  
-                <input class="checkbox" type="checkbox" name="" id="checkboxid" />
-
-                
-                <div class="menu-items collapse navbar-collapse" id ="navbarSupportedContent">        
-                    <ul class="shadow-button-set navbar-nav ml-auto">
-                        <li class="nav-item">        
-                            <button><a class="nav-link" href="#about"><small>01. </small>About</a></button>
-                        </li>
-                        <li class="nav-item">
-                            <button><a class="nav-link" href="#work"><small>02. </small>Work</a></button>
-                        </li>
-                        <li class="nav-item">
-                            <button><a class="nav-link" href="#game"><small>03. </small>Game</a></button>
-                        </li>
-                        <li class="nav-item">
-                            <button><a class="nav-link" href="#contact"><small>04. </small>Contact</a></button>
-                        </li>
-                    </ul>
+            <div class="nav-center">
+                <div class="mini-pill">
+                    <span class="spark spark-pink" title="spark star">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 4.8 5.3.8-3.8 3.2.9 5.3L12 15.9 7.7 17.6l.9-5.3L4.8 9l5.3-.8L12 2.5z"/></svg>
+                    </span>
+                    <span class="spark spark-green" title="spark sparkle">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="currentColor"><path d="M12 1l1.6 3.5L17 6l-3.4 2.1L12 12l-1.6-3.9L7 6l3.4-1.5L12 1z"/><path d="M4 13l.9 2.1L7 16l-1.1 1.3L6 19l-2-1.2L2 16l1.2-1.7L4 13z"/></g></svg>
+                    </span>
+                    <span class="spark spark-blue" title="spark comet">
+                        <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="currentColor"><path d="M3 7c0 2.8 4.1 5 9 5s9-2.2 9-5-4.1-5-9-5S3 4.2 3 7z"/><path d="M0 3c2 0 4.2 1 6 3-1.8 2-4 3-6 3V3z" opacity=".9"/></g></svg>
+                    </span>
+                    <span class="pill-text">yoo!</span>
                 </div>
+                <ul class="center-menu">
+                    <li><a href="#about"><span class="icon">✳️</span><span class="label">about</span></a></li>
+                    <li><a href="#work"><span class="icon">⭐</span><span class="label">work</span></a></li>
+                    <li><a href="#game"><span class="icon">🕹️</span><span class="label">mini game</span></a></li>
+                    <li><a href="#contact"><span class="icon">✉️</span><span class="label">contact</span></a></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <a class="btn-talk" href="#contact">Let's talk</a>
             </div>
         </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="#navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </nav>
-    <!-- End Of Second Navigation -->
+    <!-- End Of Navigation -->
+
+    <style>
+        .merged-nav{background:transparent;border-bottom:none;box-shadow:none;padding:10px 0;font-family:'Syne Mono', monospace}
+        .nav-merged-container{display:flex;align-items:center;justify-content:space-between}
+        .nav-left{color:#333;font-weight:600;font-size:14px}
+        .brand-svg{height:40px;display:block}
+        .brand-svg .neon-ring{pointer-events:none;stroke:#d6ff00;filter:url(#ringGlow)}
+        .nav-left .brand-link{color:#333;text-decoration:underline;margin-left:6px}
+        .nav-center{flex:1;display:flex;justify-content:center}
+        .center-menu{display:flex;gap:10px;list-style:none;margin:0;padding:6px 12px;background:#fff;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.08);font-family:'Syne Mono', monospace}
+        .mini-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;background:#fff;border-radius:999px;margin-right:10px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+                .spark{display:inline-block;width:22px;height:22px;line-height:0;transition:transform .18s ease;filter:drop-shadow(0 6px 10px rgba(0,0,0,.06));animation:shimmer 2200ms ease-in-out infinite}
+                .spark svg{width:100%;height:100%;display:block}
+                .spark:hover{transform:scale(1.18) rotate(-6deg)}
+                .spark-pink{color:#ff84b3;animation-delay:0s}
+                .spark-green{color:#6acb6a;animation-delay:.12s}
+                .spark-blue{color:#4db6ff;animation-delay:.26s}
+
+                @keyframes shimmer{
+                    0%{transform:scale(1) rotate(0);opacity:.9}
+                    45%{transform:scale(1.14) rotate(6deg);opacity:1}
+                    65%{transform:scale(1.06) rotate(-3deg);opacity:1}
+                    100%{transform:scale(1) rotate(0);opacity:.9}
+                }
+                @keyframes brand-pulse{
+                    0%{transform:translate(-50%,-50%) scale(.56);box-shadow:0 6px 12px rgba(214,255,0,.14);opacity:.9}
+                    50%{transform:translate(-50%,-50%) scale(.66);box-shadow:0 14px 36px rgba(214,255,0,.32);opacity:1}
+                    100%{transform:translate(-50%,-50%) scale(.56);box-shadow:0 6px 12px rgba(214,255,0,.14);opacity:.9}
+                }
+        .pill-text{font-weight:800;padding-left:4px;color:#333;font-family:'Syne Mono', monospace}
+        .center-menu li a{display:flex;align-items:center;gap:8px;padding:8px 12px;color:#333;text-decoration:none;font-weight:700;border-radius:999px}
+        .center-menu li a .icon{font-size:14px}
+        .center-menu li a .label{text-transform:lowercase;font-size:13px}
+        .nav-right{display:flex;align-items:center;gap:12px}
+        .nav-right .small-note{color:#333;font-weight:600}
+        .nav-right .heart{color:#e53935;margin-left:6px}
+        .btn-talk{background:#0a0a0a;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:800}
+        @media (max-width:768px){
+            .center-menu{display:none}
+            .nav-left{font-size:13px}
+        }
+        /* Header canvas sits behind overlays and doesn't block interactions */
+        header.header{position:relative;z-index:2}
+        #header-canvas{position:absolute;inset:0;z-index:0;pointer-events:none}
+        #header-canvas canvas{width:100% !important;height:100% !important;display:block;pointer-events:none}
+        /* Ensure overlay content and the logo image are above the canvas and interactive */
+        header .overlay{position:relative;z-index:3;pointer-events:auto;display:flex;align-items:center;justify-content:center;flex-direction:column}
+        .overlay-title{position:relative;z-index:4}
+        #img-joysick{position:relative;z-index:5;pointer-events:auto;width:1300px;height:300px}
+        /* Make circular text and related SVG interactive above the canvas */
+        #container-circular-text{position:relative;z-index:6;pointer-events:auto}
+        #container-circular-text svg, #container-circular-text textPath{pointer-events:auto}
+        /* When the header background is dark, invert only the brand SVG for contrast */
+        .brand-svg text{transition:fill .22s ease,stroke .22s ease,opacity .22s ease}
+        /* Highlight overlay title to match attached neon style */
+        /* hide original title SVG and use the new stylized SVG instead */
+        .overlay-title{display:none !important}
+        .overlay-title-new{background:#d6ff00;padding:6px 10px;border-radius:3px;display:inline-block;width:90%;max-width:900px;height:auto}
+        .overlay-title-new text{fill:#b891ff}
+        /* Subtitle font: Poppins */
+        .overlay-title-new .joy-text{font-family: 'Poppins', 'Syne Mono', sans-serif; font-weight:800; font-size:110px}
+        /* animate waves inside the clipped title */
+        .overlay-title-new .waves{transform-box:fill-box;transform-origin:center;animation:waveMove 6s linear infinite}
+        .overlay-title-new .waves2{transform-box:fill-box;transform-origin:center;animation:waveMove2 10s linear infinite}
+        .overlay-title-new .waves path,.overlay-title-new .waves2 path{will-change:transform}
+        @keyframes waveMove{
+            0%{transform:translateX(0)}
+            50%{transform:translateX(-40px)}
+            100%{transform:translateX(0)}
+        }
+        @keyframes waveMove2{
+            0%{transform:translateX(0)}
+            50%{transform:translateX(40px)}
+            100%{transform:translateX(0)}
+        }
+        @media (prefers-reduced-motion: reduce){
+            .overlay-title-new .waves,.overlay-title-new .waves2{animation:none}
+        }
+        /* allow SVG title colors to control fill/stroke (don't force black) */
+        .overlay-title *{fill:inherit !important;stroke:inherit !important}
+        /* Avatar replacement sizing & tighter about spacing */
+        img.avatar{width:140px;height:140px;border-radius:50%;display:block;margin:6px auto 0;object-fit:cover}
+        section#about{padding-top:12px;padding-bottom:18px;margin-top:-32px}
+        header .shape{margin-bottom:-36px}
+        .container-about{max-width:720px;margin:0 auto;padding:6px 12px}
+        .typing-demo{margin-top:6px;margin-bottom:6px}
+        .marquee{margin-top:6px}
+        /* remove extra gap below marquee and tighten spacing into the work section */
+        .marquee{margin-bottom:0;padding-bottom:0}
+        section#about{padding-bottom:6px;margin-bottom:0}
+        section#work{margin-top:0;padding-top:6px}
+    </style>
+
+    <style>
+        /* Make the work/projects list scroll horizontally for horizontal browsing */
+        #work .row.justify-content-between{
+            display:flex;
+            flex-wrap:nowrap;
+            overflow-x:auto;
+            -webkit-overflow-scrolling:touch;
+            gap:22px;
+            padding:18px 12px;
+            scroll-snap-type:x mandatory;
+        }
+        /* Each project card stays a fixed width and snaps to center */
+        #work .row.justify-content-between > div{
+            flex:0 0 720px;
+            scroll-snap-align:center;
+            box-sizing:border-box;
+        }
+        /* Ensure images inside cards are responsive and don't overflow */
+        #work .img-work-1{width:100%;height:auto;display:block;border-radius:8px}
+        /* optional: hide vertical scrollbar in WebKit while keeping horizontal */
+        #work .row.justify-content-between::-webkit-scrollbar{height:10px}
+        #work .row.justify-content-between::-webkit-scrollbar-track{background:transparent}
+        #work .row.justify-content-between::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12);border-radius:6px}
+        @media (max-width:1200px){
+            #work .row.justify-content-between > div{flex:0 0 540px}
+        }
+        @media (max-width:1024px){
+            #work .row.justify-content-between > div{flex:0 0 420px}
+        }
+        @media (max-width:768px){
+            #work .row.justify-content-between > div{flex:0 0 320px}
+        }
+    </style>
+
+    <style>
+        /* Ensure about and game sections use the same plain background as work */
+        section#about, section#game {
+            background-image: none !important;
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+        }
+    </style>
 
     <!-- Page Header -->
     <header class="header">
@@ -101,7 +254,7 @@
             </div>
         </div>-->
 
-        <div id="container-circular-text">
+        <!--<div id="container-circular-text">
             <div id="circle">
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve">
                     <defs>
@@ -116,7 +269,7 @@
                     </g>
                 </svg>
             </div>
-        </div>
+        </div>-->
 
         <div class="overlay">
             <h1 class="subtitle"></h1>
@@ -126,17 +279,116 @@
                 </g>
             </svg>
             <!--<h1 class="title">JOYSICK STUDIO</h1>-->
+            <!-- New stylized title SVG (FLUID-like effect) -->
+            <svg class="overlay-title-new" viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JOYSICK STUDIO">
+                <rect width="100%" height="100%" fill="#d6ff00" rx="4"/>
+                <defs>
+                    
+                    <!-- ripple filter: turbulence + displacement to create animated ripples inside the clipped text -->
+                    <filter id="rippleFilter" x="-20%" y="-20%" width="140%" height="140%" filterUnits="userSpaceOnUse">
+                        <feTurbulence id="rippleTurb" type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="2" result="turb" />
+                        <!-- SMIL animate is removed in many browsers; JS fallback handles animation. -->
+                        <feDisplacementMap in="SourceGraphic" in2="turb" scale="80" xChannelSelector="R" yChannelSelector="G"/>
+                    </filter>
+                    <clipPath id="joyClip2">
+                        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="joy-text">JOYSICK STUDIO</text>
+                    </clipPath>
+                </defs>
+                    <g clip-path="url(#joyClip2)" filter="url(#rippleFilter)">
+                    <rect width="100%" height="100%" fill="#b891ff" />
+                    <g class="waves" stroke="#d6ff00" stroke-width="6" stroke-linecap="round" fill="none" opacity="1">
+                        <path d="M -80 8 C 40 -2, 120 28, 240 8 C 360 -12, 440 28, 560 8 C 680 -12, 760 28, 880 8"/>
+                        <path d="M -80 18 C 40 8, 120 38, 240 18 C 360 -2, 440 38, 560 18 C 680 -2, 760 38, 880 18"/>
+                        <path d="M -80 28 C 40 18, 120 48, 240 28 C 360 8, 440 48, 560 28 C 680 8, 760 48, 880 28"/>
+                        <path d="M -80 38 C 40 28, 120 58, 240 38 C 360 18, 440 58, 560 38 C 680 18, 760 58, 880 38"/>
+                        <path d="M -80 48 C 40 38, 120 68, 240 48 C 360 28, 440 68, 560 48 C 680 28, 760 68, 880 48"/>
+                        <path d="M -80 58 C 40 48, 120 78, 240 58 C 360 38, 440 78, 560 58 C 680 38, 760 78, 880 58"/>
+                        <path d="M -80 68 C 40 58, 120 88, 240 68 C 360 48, 440 88, 560 68 C 680 48, 760 88, 880 68"/>
+                        <path d="M -80 78 C 40 68, 120 98, 240 78 C 360 58, 440 98, 560 78 C 680 58, 760 98, 880 78"/>
+                        <path d="M -80 88 C 40 78, 120 108, 240 88 C 360 68, 440 108, 560 88 C 680 68, 760 108, 880 88"/>
+                        <path d="M -80 98 C 40 88, 120 118, 240 98 C 360 78, 440 118, 560 98 C 680 78, 760 118, 880 98"/>
+                        <path d="M -80 108 C 40 98, 120 128, 240 108 C 360 88, 440 128, 560 108 C 680 88, 760 128, 880 108"/>
+                        <path d="M -80 118 C 40 108, 120 138, 240 118 C 360 98, 440 138, 560 118 C 680 98, 760 138, 880 118"/>
+                        <path d="M -80 128 C 40 118, 120 148, 240 128 C 360 108, 440 148, 560 128 C 680 108, 760 148, 880 128"/>
+                        <path d="M -80 138 C 40 128, 120 158, 240 138 C 360 118, 440 158, 560 138 C 680 118, 760 158, 880 138"/>
+                    </g>
+                    <!-- second wave layer (opposite direction, different speed) -->
+                    <g class="waves2" stroke="#d6ff00" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.95">
+                        <path d="M 880 8 C 760 -2, 680 28, 560 8 C 440 -12, 360 28, 240 8 C 120 -12, 40 28, -80 8"/>
+                        <path d="M 880 18 C 760 8, 680 38, 560 18 C 440 -2, 360 38, 240 18 C 120 -2, 40 38, -80 18"/>
+                        <path d="M 880 28 C 760 18, 680 48, 560 28 C 440 8, 360 48, 240 28 C 120 8, 40 48, -80 28"/>
+                        <path d="M 880 38 C 760 28, 680 58, 560 38 C 440 18, 360 58, 240 38 C 120 18, 40 58, -80 38"/>
+                        <path d="M 880 48 C 760 38, 680 68, 560 48 C 440 28, 360 68, 240 48 C 120 28, 40 68, -80 48"/>
+                        <path d="M 880 58 C 760 48, 680 78, 560 58 C 440 38, 360 78, 240 58 C 120 38, 40 78, -80 58"/>
+                        <path d="M 880 68 C 760 58, 680 88, 560 68 C 440 48, 360 88, 240 68 C 120 48, 40 88, -80 68"/>
+                        <path d="M 880 78 C 760 68, 680 98, 560 78 C 440 58, 360 98, 240 78 C 120 58, 40 98, -80 78"/>
+                        <path d="M 880 88 C 760 78, 680 108, 560 88 C 440 68, 360 108, 240 88 C 120 68, 40 108, -80 88"/>
+                        <path d="M 880 98 C 760 88, 680 118, 560 98 C 440 78, 360 118, 240 98 C 120 78, 40 118, -80 98"/>
+                        <path d="M 880 108 C 760 98, 680 128, 560 108 C 440 88, 360 128, 240 108 C 120 88, 40 128, -80 108"/>
+                        <path d="M 880 118 C 760 108, 680 138, 560 118 C 440 98, 360 138, 240 118 C 120 98, 40 138, -80 118"/>
+                        <path d="M 880 128 C 760 118, 680 148, 560 128 C 440 108, 360 148, 240 128 C 120 108, 40 148, -80 128"/>
+                    </g>
+                </g>
+                <!-- visible black title text on top (centered vertically) -->
+                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="joy-text" fill="#000">JOYSICK STUDIO</text>
+            </svg>
         </div>
 
         <div class="overlay">
             <img id="img-joysick" src="assets/imgs/Logo-idle.png" onclick="ChangeImage()" alt="">           
         </div>
 
+    <script>
+    // Respect prefers-reduced-motion by removing the SVG animation if requested
+    (function(){
+        try{
+            const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if(mq && mq.matches){
+                const anim = document.querySelector('#rippleFilter animate');
+                if(anim && anim.parentNode) anim.parentNode.removeChild(anim);
+            }
+        }catch(e){/* ignore */}
+    })();
+    </script>
+
+    <script>
+    // JS fallback animation for feTurbulence baseFrequency (better cross-browser)
+    (function(){
+        try{
+            const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if(mq && mq.matches) return;
+            const turb = document.getElementById('rippleTurb');
+            if(!turb) return;
+            // remove SMIL animate if present to avoid conflicts
+            const smil = document.querySelector('#rippleFilter animate');
+            if(smil && smil.parentNode) smil.parentNode.removeChild(smil);
+            let start = performance.now();
+            function tick(now){
+                let t = (now - start) / 1000;
+                // oscillate baseFrequency between min and max
+                const min = 0.003, max = 0.02;
+                const speed = 0.9; // cycles per second approx
+                const v = min + (max - min) * (0.5 + 0.5 * Math.sin(t * Math.PI * 2 * speed));
+                try{ turb.setAttribute('baseFrequency', v); }catch(e){}
+                // debug: expose value to console so we can confirm animation
+                if(window.__joy_debug_ripple && performance.now() - start < 5000){
+                    console.log('ripple baseFrequency', v);
+                }
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }catch(e){console.warn('ripple animation fx error', e)}
+    })();
+    </script>
+
         <div class="shape">
             <svg viewBox="0 0 1500 200">
                 <path d="m 0,240 h 1500.4828 v -71.92164 c 0,0 -286.2763,-81.79324 -743.19024,-81.79324 C 300.37862,86.28512 0,168.07836 0,168.07836 Z"/>
             </svg>
         </div>
+
+        <!-- Header canvas container for soft string effects -->
+        <div id="header-canvas" style="position:absolute;inset:0;z-index:0;pointer-events:none"></div>
         <!-- <div class="mouse-icon"><div class="wheel"></div></div> -->
     </header>
     <!-- End Of Page Header -->
@@ -150,7 +402,7 @@
                 I turn your ideas into creative impacts.
             </div>
             <!--<h6 class="section-subtitle text-center mb-5 pb-3">I turn your ideas into creative impacts.</h6>-->
-        </div><br>
+        </div>
         <!--<div class="wrapper-card">
             <i class="fas fa-angle-left" id="left"></i>
             <ul class="cards-carousel">       
@@ -242,6 +494,33 @@
     </section>
     <!-- End OF Service Section -->
 
+    <script>
+    // Move header JOYSICK image and subtitle down to replace avatar
+    document.addEventListener('DOMContentLoaded', function(){
+        try{
+            var avatar = document.querySelector('img.avatar');
+            var joysick = document.getElementById('img-joysick');
+            var headerSubtitle = document.querySelector('header .subtitle');
+            var containerAbout = document.querySelector('.container-about');
+            if(avatar && joysick && containerAbout){
+                // Replace avatar with the existing joysick image node (moves it in the DOM)
+                avatar.parentNode.replaceChild(joysick, avatar);
+                // Ensure it keeps avatar styling
+                joysick.classList.add('avatar');
+                // If header subtitle has content, clone and insert it under the new avatar
+                if(headerSubtitle && headerSubtitle.textContent.trim()){ 
+                    var subClone = headerSubtitle.cloneNode(true);
+                    subClone.classList.add('section-subtitle','text-center','mb-5','pb-3');
+                    // insert before typing-demo if exists, otherwise append
+                    var typing = containerAbout.querySelector('.typing-demo');
+                    if(typing) containerAbout.insertBefore(subClone, typing);
+                    else containerAbout.appendChild(subClone);
+                }
+            }
+        }catch(e){console.warn('Relocation script error',e)}
+    })
+    </script>
+
     <!-- work Section -->
     <section class="section" id="work">
         <div class="container-work">
@@ -291,6 +570,42 @@
         </div>
     </section>
     <!-- End OF work Section -->
+
+    <style>
+        /* drag cursor when interacting with horizontal scroller */
+        #work .row.justify-content-between.dragging{cursor:grabbing;cursor:-webkit-grabbing}
+    </style>
+
+    <script>
+    // Enable click-and-drag horizontal scrolling for the work gallery
+    (function(){
+        const scroller = document.querySelector('#work .row.justify-content-between');
+        if(!scroller) return;
+        let isDown = false, startX, scrollLeft;
+        scroller.addEventListener('mousedown', (e) => {
+            isDown = true; scroller.classList.add('dragging'); startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft; e.preventDefault();
+        });
+        scroller.addEventListener('mouseleave', () => { isDown = false; scroller.classList.remove('dragging'); });
+        scroller.addEventListener('mouseup', () => { isDown = false; scroller.classList.remove('dragging'); });
+        scroller.addEventListener('mousemove', (e) => {
+            if(!isDown) return; const x = e.pageX - scroller.offsetLeft; const walk = (x - startX) * 1.4; scroller.scrollLeft = scrollLeft - walk;
+        });
+        // touch support
+        scroller.addEventListener('touchstart', (e) => { startX = e.touches[0].pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft; });
+        scroller.addEventListener('touchmove', (e) => { const x = e.touches[0].pageX - scroller.offsetLeft; const walk = (x - startX) * 1.4; scroller.scrollLeft = scrollLeft - walk; });
+        // translate vertical wheel to horizontal scroll while pointer is over the scroller
+        scroller.addEventListener('wheel', function(e){
+            // if shiftKey is pressed, allow normal horizontal scroll
+            if(e.shiftKey) return;
+            // Only intercept vertical wheel deltas
+            if(Math.abs(e.deltaY) > 0){
+                e.preventDefault();
+                // multiply for faster swipe feel
+                scroller.scrollLeft += e.deltaY * 1.6;
+            }
+        }, {passive:false});
+    })();
+    </script>
 
     <!-- Mini Game Section: 3x3 card stacks -->
     <section class="section" id="game">
@@ -547,6 +862,213 @@
         </script>
     </section>
     <!-- End OF Mini Game Section -->
+
+    <!-- Recording indicator (used by sketch) -->
+    <div id="recording-indicator" style="display:none;position:fixed;top:20px;left:20px;color:#fff;font-weight:700;z-index:999;padding:8px;background:rgba(0,0,0,.4);border-radius:6px"> <span id="recording-time">REC: 24.0s</span></div>
+
+    <!-- Header soft string sketch -->
+    <script>
+    // Adapted p5 sketch: renders into #header-canvas
+    (function(){
+    const settings = {
+        elasticity: 0.8,
+        bendingResistance: 0.1,
+        repulsionStrength: 2.0,
+        repulsionRadius: 60,
+        damping: 0.85,
+        gravity: 0.0,
+        lineWidth: 60,
+        restLength: 15,
+        minStrings: 1,
+        maxStrings: 20,
+        autoMode: true,
+        initialVelocity: 15,
+        autoSpawnThreshold: 75,
+        autoSpawnInterval: 100,
+        recordVideo: () => { if (!isRecording) startRecording(); },
+        reset: () => { strings = []; initStrings(); }
+    };
+
+    const palette = ['#eb4e28','#1e4b9d','#f5dec0','#dfa6e0','#8fb6ae','#8d98c6','#19242d','#111617'];
+    let currentBgColor;
+    let currentLineColors = [];
+    let strings = [];
+    let draggingPoint = null;
+    let isRecording = false;
+    let recordingStartTime = 0;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let lastSpawnTime = 0;
+    let lastRecordingInterval = 0;
+    let canvasParent;
+
+    function setup(){
+        canvasParent = document.getElementById('header-canvas');
+        let w = canvasParent.clientWidth;
+        let h = canvasParent.clientHeight;
+        let cnv = createCanvas(w,h);
+        cnv.parent('header-canvas');
+        // GUI
+        try{ window.gui = new lil.GUI({ title: 'Physics Settings' });
+            window.gui.add(settings, 'elasticity', 0.01, 2.0).name('Elasticity');
+            window.gui.add(settings, 'bendingResistance', 0.0, 1.0).name('Bend Resistance');
+            window.gui.add(settings, 'repulsionStrength', 0.0, 10.0).name('Repulsion Force');
+            window.gui.add(settings, 'repulsionRadius', 10, 150).name('Repulsion Radius');
+            window.gui.add(settings, 'damping', 0.5, 0.99).name('Damping');
+            window.gui.add(settings, 'gravity', -2.0, 2.0).name('Gravity');
+            window.gui.add(settings, 'lineWidth', 10, 150).name('Line Width');
+            window.gui.add(settings, 'autoMode').name('Auto Mode').listen();
+            window.gui.add(settings, 'initialVelocity', 0, 50).name('Initial Velocity');
+            window.gui.add(settings, 'autoSpawnThreshold', 50, 400).name('Spawn Clearance');
+            window.gui.add(settings, 'autoSpawnInterval', 100, 2000).name('Spawn Interval');
+            window.gui.add(settings, 'minStrings', 0, 60, 1).name('Min Strings');
+            window.gui.add(settings, 'maxStrings', 1, 60, 1).name('Max Strings');
+            window.gui.add(settings, 'recordVideo').name('Record (24s)');
+            window.gui.add(settings, 'reset').name('Reset Scene');
+            window.gui.hide();
+        }catch(e){/* gui optional */}
+        initStrings();
+    }
+
+    function initStrings(){
+        let p = [...palette];
+        let bgIndex = floor(random(p.length));
+        currentBgColor = color(p[bgIndex]);
+        p.splice(bgIndex,1);
+        currentLineColors = p.map(c=>color(c));
+        let initialCount = Math.max(settings.minStrings, Math.min(3, settings.maxStrings));
+        for(let i=0;i<initialCount;i++){
+            let rx = random(60, width-60);
+            let ry = random(40, height-40);
+            let s = new ElasticString(rx,ry,35);
+            s.color = currentLineColors[floor(random(currentLineColors.length))];
+            strings.push(s);
+        }
+    }
+
+    function draw(){
+        background(currentBgColor);
+        let allPoints = [];
+        for(let s of strings) allPoints = allPoints.concat(s.points);
+        for(let i=0;i<allPoints.length;i++){
+            for(let j=i+1;j<allPoints.length;j++){
+                let p1 = allPoints[i]; let p2 = allPoints[j];
+                let dx=p1.x-p2.x, dy=p1.y-p2.y, dSq=dx*dx+dy*dy;
+                let rSq = settings.repulsionRadius*settings.repulsionRadius;
+                if(dSq>0 && dSq<rSq){
+                    let d = sqrt(dSq);
+                    let force = (settings.repulsionRadius - d) / settings.repulsionRadius * settings.repulsionStrength;
+                    let fx = (dx/d) * force; let fy = (dy/d) * force;
+                    p1.vx += fx; p1.vy += fy; p2.vx -= fx; p2.vy -= fy;
+                }
+            }
+        }
+        for(let s of strings) s.update();
+        if(mouseIsPressed && draggingPoint){
+            let tx = constrain(mouseX,0,width); let ty = constrain(mouseY,0,height);
+            draggingPoint.x = tx; draggingPoint.y = ty; draggingPoint.vx=0; draggingPoint.vy=0;
+        }
+        if(settings.autoMode && millis()-lastSpawnTime>settings.autoSpawnInterval && strings.length < settings.maxStrings){
+            let allPts = [];
+            for(let s of strings) allPts = allPts.concat(s.points);
+            for(let tries=0;tries<10;tries++){
+                let rx=random(60,width-60); let ry=random(40,height-40); let tooClose=false;
+                for(let p of allPts){ if(dist(rx,ry,p.x,p.y) < settings.autoSpawnThreshold){ tooClose=true; break; } }
+                if(!tooClose){ let s=new ElasticString(rx,ry,35); s.color = currentLineColors[floor(random(currentLineColors.length))]; strings.push(s); lastSpawnTime = millis(); break; }
+            }
+        }
+        // enforce min/max strings in case the setting was changed dynamically
+        if(settings.minStrings > settings.maxStrings){ settings.minStrings = settings.maxStrings; }
+        if(strings.length > settings.maxStrings){ strings.length = settings.maxStrings; }
+        while(strings.length < settings.minStrings){
+            let rx = random(60, width-60); let ry = random(40, height-40);
+            let s = new ElasticString(rx,ry,35); s.color = currentLineColors[floor(random(currentLineColors.length))];
+            strings.push(s);
+        }
+        for(let s of strings) s.draw();
+        if(isRecording){ let elapsed = (millis()-recordingStartTime)/1000; let remaining = 24.0 - elapsed; let currentInterval = Math.floor(elapsed/6.0);
+            if(currentInterval > lastRecordingInterval && currentInterval < 4){ settings.reset(); lastRecordingInterval = currentInterval; }
+            if(remaining <= 0){ stopRecording(); remaining = 0; } else { let el = document.getElementById('recording-time'); if(el) el.innerText = `REC: ${remaining.toFixed(1)}s`; }
+        }
+    }
+
+    function mousePressed(){
+        let closestDist = 40; let closestPt = null;
+        for(let s of strings){ for(let p of s.points){ let d = dist(mouseX,mouseY,p.x,p.y); if(d < closestDist){ closestDist=d; closestPt=p; } } }
+        if(closestPt) draggingPoint = closestPt; else {
+            if(strings.length < settings.maxStrings){ let s=new ElasticString(mouseX,mouseY,35); s.color=currentLineColors[floor(random(currentLineColors.length))]; strings.push(s); }
+        }
+    }
+
+    function mouseReleased(){ draggingPoint = null; }
+
+    function startRecording(){ settings.reset(); let cnv = document.querySelector('#header-canvas canvas'); if(!cnv) return; let stream = cnv.captureStream(30);
+        let options = { mimeType: 'video/webm' }; if(MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) options = { mimeType: 'video/webm;codecs=vp9' };
+        mediaRecorder = new MediaRecorder(stream, options); recordedChunks=[]; mediaRecorder.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = function(){ let blob = new Blob(recordedChunks, { type: 'video/webm' }); let url = URL.createObjectURL(blob); let a = document.createElement('a'); document.body.appendChild(a); a.style='display:none'; a.href=url; a.download='elastic_strings.webm'; a.click(); URL.revokeObjectURL(url); };
+        mediaRecorder.start(); isRecording=true; recordingStartTime=millis(); lastRecordingInterval=0; settings.autoMode=true; let ind=document.getElementById('recording-indicator'); if(ind) ind.style.display='flex';
+    }
+    function stopRecording(){ if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); isRecording=false; settings.autoMode=false; let ind=document.getElementById('recording-indicator'); if(ind) ind.style.display='none'; }
+
+    class Point{ constructor(x,y){ this.x=x; this.y=y; this.vx=0; this.vy=0;} update(){ if(this===draggingPoint) return; this.vy += settings.gravity; this.vx *= settings.damping; this.vy *= settings.damping; let maxSpeed = 50; let speedSq = this.vx*this.vx+this.vy*this.vy; if(speedSq>maxSpeed*maxSpeed){ let speed = sqrt(speedSq); this.vx = (this.vx/speed)*maxSpeed; this.vy = (this.vy/speed)*maxSpeed; } this.x += this.vx; this.y += this.vy; let rSq = settings.repulsionRadius*settings.repulsionRadius; let dxLeft = this.x - 0; if(dxLeft >0 && dxLeft < settings.repulsionRadius){ let force = (settings.repulsionRadius - dxLeft)/settings.repulsionRadius * settings.repulsionStrength; this.vx += force; } else if(this.x < 0){ this.x = 0; if(this.vx < 0) this.vx *= -0.5; } let dxRight = width - this.x; if(dxRight >0 && dxRight < settings.repulsionRadius){ let force = (settings.repulsionRadius - dxRight)/settings.repulsionRadius * settings.repulsionStrength; this.vx -= force; } else if(this.x > width){ this.x = width; if(this.vx > 0) this.vx *= -0.5; } let dyTop = this.y - 0; if(dyTop >0 && dyTop < settings.repulsionRadius){ let force = (settings.repulsionRadius - dyTop)/settings.repulsionRadius * settings.repulsionStrength; this.vy += force; } else if(this.y < 0){ this.y = 0; if(this.vy < 0) this.vy *= -0.5; } let dyBottom = height - this.y; if(dyBottom >0 && dyBottom < settings.repulsionRadius){ let force = (settings.repulsionRadius - dyBottom)/settings.repulsionRadius * settings.repulsionStrength; this.vy -= force; } else if(this.y > height){ this.y = height; if(this.vy > 0) this.vy *= -0.5; } } }
+
+    class ElasticString{ constructor(x,y,numPoints){ this.points = []; this.color = color(255); let offsetAngle = random(TWO_PI); let waveAmplitude = 25; let waveFrequency = 0.3; let tossAngle = random(TWO_PI); let tossSpeed = random(0, settings.initialVelocity); let initVx = cos(tossAngle) * tossSpeed; let initVy = sin(tossAngle) * tossSpeed; for(let i=0;i<numPoints;i++){ let localX = i * settings.restLength * 0.1; let localY = sin(i * waveFrequency) * waveAmplitude; let globalX = x + localX * cos(offsetAngle) - localY * sin(offsetAngle); let globalY = y + localX * sin(offsetAngle) + localY * cos(offsetAngle); let p = new Point(globalX, globalY); p.vx = initVx + random(-2,2); p.vy = initVy + random(-2,2); this.points.push(p); } }
+        update(){ for(let i=0;i<this.points.length-1;i++){ let p1=this.points[i]; let p2=this.points[i+1]; let dx=p2.x-p1.x; let dy=p2.y-p1.y; let d=sqrt(dx*dx+dy*dy); if(d>0){ let diff = d - settings.restLength; let force = diff * settings.elasticity; let fx = (dx/d) * force; let fy = (dy/d) * force; p1.vx += fx; p1.vy += fy; p2.vx -= fx; p2.vy -= fy; } } for(let i=0;i<this.points.length-2;i++){ let p1=this.points[i]; let p2=this.points[i+2]; let dx=p2.x-p1.x; let dy=p2.y-p1.y; let d=sqrt(dx*dx+dy*dy); let targetLength = settings.restLength*2; if(d>0){ let diff = d - targetLength; let force = diff * settings.bendingResistance; let fx = (dx/d) * force; let fy = (dy/d) * force; p1.vx += fx; p1.vy += fy; p2.vx -= fx; p2.vy -= fy; } } for(let p of this.points) p.update(); }
+        draw(){
+            noFill(); stroke(this.color); strokeWeight(settings.lineWidth); strokeJoin(ROUND);
+            beginShape(); if(this.points.length>0) curveVertex(this.points[0].x, this.points[0].y);
+            for(let p of this.points) curveVertex(p.x,p.y);
+            if(this.points.length>0) curveVertex(this.points[this.points.length-1].x, this.points[this.points.length-1].y);
+            endShape();
+            // draw a decorative flower at the tip of the string
+            if(this.points.length>0){
+                const tip = this.points[this.points.length-1];
+                // increase flower size substantially: larger multiplier and higher minimum
+                drawFlower(tip.x, tip.y, Math.max(24, settings.lineWidth * 0.8), this.color);
+            }
+        }
+    }
+
+    // small stylized flower renderer used at string tips
+    function drawFlower(x,y,size,col){
+        push(); translate(x,y);
+        let centerColor = color(250, 210, 40);
+        noStroke();
+        // draw petals (white)
+        const petals = 8;
+        for(let i=0;i<petals;i++){
+            push(); rotate((TWO_PI / petals) * i);
+            fill(255);
+            ellipse(size*0.95, 0, size*1.2, size*0.6);
+            pop();
+        }
+        // draw small white leaf-like shapes around the yellow center (sunflower style)
+        fill(255);
+        const leaves = 12;
+        for(let i=0;i<leaves;i++){
+            push();
+            rotate((TWO_PI / leaves) * i + (TWO_PI / leaves) * 0.5);
+            translate(size*0.45, 0);
+            rotate(PI/6);
+            ellipse(0,0, size*0.6, size*0.28);
+            pop();
+        }
+        // center (yellow dot)
+        fill(centerColor);
+        ellipse(0,0, size*0.9, size*0.9);
+        pop();
+    }
+
+    function windowResized(){ if(canvasParent){ let w = canvasParent.clientWidth; let h = canvasParent.clientHeight; resizeCanvas(w,h); } }
+
+    // expose to p5
+    window.setup = setup; window.draw = draw; window.mousePressed = mousePressed; window.mouseReleased = mouseReleased; window.windowResized = windowResized;
+    })();
+    </script>
+
+    <!-- Header color detector removed -->
+
+        <!-- Brand inversion/brightness detection removed -->
 
 
     <!-- Portfolio Section
