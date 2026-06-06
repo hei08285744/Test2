@@ -306,4 +306,114 @@ window.onmouseup = e => {
 
 }*/
 
+const form = document.querySelector(".signup");
+const button = form.querySelector("button.dodge");
+const buttonLabel = button.querySelector("span");
+const input = form.querySelector('input[type="email"]');
+const note = form.querySelector(".email-note");
+const tagText = document.querySelector(".tag-text");
+const counter = document.querySelector('[data-counter="leaving"]');
+
+const DODGE_RADIUS = 140;
+const MAX_OFFSET = 220;
+let offsetX = 0,
+	offsetY = 0;
+let labelState = "still";
+
+const setLabel = (state) => {
+	if (button.disabled) return;
+	if (state === labelState) return;
+	labelState = state;
+	buttonLabel.style.opacity = "0";
+	setTimeout(() => {
+		buttonLabel.textContent = state === "still" ? "Notify Me" : "Go away";
+		buttonLabel.style.opacity = "1";
+	}, 180);
+};
+
+const dodge = (e) => {
+	const rect = button.getBoundingClientRect();
+	const cx = rect.left + rect.width / 2;
+	const cy = rect.top + rect.height / 2;
+	const dx = e.clientX - cx;
+	const dy = e.clientY - cy;
+	const dist = Math.hypot(dx, dy);
+
+	if (dist < DODGE_RADIUS) {
+		const force = (DODGE_RADIUS - dist) / DODGE_RADIUS;
+		const angle = Math.atan2(dy, dx);
+		const push = force * 90;
+
+		offsetX = clamp(offsetX - Math.cos(angle) * push, -MAX_OFFSET, MAX_OFFSET);
+		offsetY = clamp(offsetY - Math.sin(angle) * push, -MAX_OFFSET, MAX_OFFSET);
+		button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+		setLabel("fleeing");
+	}
+};
+
+const settle = () => {
+	if (Math.abs(offsetX) < 0.5 && Math.abs(offsetY) < 0.5) {
+		setLabel("still");
+		return;
+	}
+	offsetX *= 0.92;
+	offsetY *= 0.92;
+	button.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+	if (Math.hypot(offsetX, offsetY) < 4) setLabel("still");
+};
+
+window.addEventListener("pointermove", dodge);
+setInterval(settle, 60);
+
+form.addEventListener("submit", (e) => {
+	e.preventDefault();
+	form.classList.add("removed");
+	button.classList.add("caught");
+	buttonLabel.textContent = "Forgotten";
+	note.textContent =
+		"You have been removed from our records. Thank you for your persistence.";
+	input.value = "";
+	input.disabled = true;
+	button.disabled = true;
+});
+
+let leaving = 2481;
+const leavingInterval = setInterval(() => {
+	if (leaving > 0) {
+		leaving -= 1;
+		counter.textContent = leaving.toLocaleString();
+	}
+}, 1800);
+
+const tagProgression = [
+	"Launching never",
+	"Already over",
+	"You missed it",
+	"It already happened"
+];
+let ei = 0;
+const tagTextFadeInterval = setInterval(() => {
+	ei = (ei + 1) % tagProgression.length;
+	tagText.style.opacity = "0";
+	setTimeout(() => {
+		tagText.textContent = tagProgression[ei];
+		tagText.style.opacity = "1";
+	}, 400);
+}, 5500);
+tagText.style.transition = "opacity 0.4s";
+
+document.querySelectorAll(".nav-links a").forEach((link) => {
+	link.addEventListener("click", (e) => {
+		e.preventDefault();
+		link.classList.add("fading");
+		setTimeout(() => (link.style.display = "none"), 400);
+	});
+});
+
+const clamp = (v, min, max) => {
+	return Math.max(min, Math.min(max, v));
+};
+
+
 
