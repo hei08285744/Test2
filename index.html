@@ -17,6 +17,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
         <!-- Add elegant serif for art-style subtitle -->
         <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@1,700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Inter for the word rotator only -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Marquee track animation */
+        .marquee{overflow:hidden;padding:8px 0}
+        .marquee-track{display:flex;align-items:center;width:max-content;gap:40px;animation:marqueeScroll 18s linear infinite}
+        .marquee-track .scroll{display:flex;gap:28px;align-items:center;white-space:nowrap}
+        .marquee .category{padding:6px 14px;font-size:20px;font-weight:700}
+        .marquee:hover .marquee-track{animation-play-state:paused}
+        @keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        /* Apply Playfair Display only to the word rotator */
+        .word-rotator, .word-rotator .word { font-family: 'Playfair Display', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-weight:700; letter-spacing:0.02em; }
+    </style>
     <!-- p5 and GUI for header animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19/dist/lil-gui.min.js"></script>
@@ -64,7 +78,7 @@
             </div>
 
             <div class="nav-center">
-                <div class="mini-pill">
+                <div id="miniPill" class="mini-pill" role="button" aria-expanded="false" aria-controls="centerMenu" tabindex="0">
                     <span class="spark spark-pink" title="spark star">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 4.8 5.3.8-3.8 3.2.9 5.3L12 15.9 7.7 17.6l.9-5.3L4.8 9l5.3-.8L12 2.5z"/></svg>
                     </span>
@@ -76,7 +90,7 @@
                     </span>
                     <span class="pill-text">yoo!</span>
                 </div>
-                <ul class="center-menu">
+                <ul id="centerMenu" class="center-menu">
                     <li><a href="#about"><span class="icon">✳️</span><span class="label">about</span></a></li>
                     <li><a href="#work"><span class="icon">⭐</span><span class="label">work</span></a></li>
                     <li><a href="#game"><span class="icon">🕹️</span><span class="label">mini game</span></a></li>
@@ -132,6 +146,9 @@
         .btn-talk{background:#0a0a0a;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:800}
         @media (max-width:768px){
             .center-menu{display:none}
+            .center-menu.open{display:flex;position:absolute;left:50%;top:64px;transform:translateX(-50%);flex-direction:column;padding:12px;background:#fff;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.12);gap:8px;z-index:999}
+            .center-menu.open li a{padding:10px 16px;border-radius:8px}
+            .mini-pill{cursor:pointer}
             .nav-left{font-size:13px}
         }
         /* Header canvas sits behind overlays and doesn't block interactions */
@@ -141,7 +158,8 @@
         /* Ensure overlay content and the logo image are above the canvas and interactive */
         header .overlay{position:relative;z-index:3;pointer-events:auto;display:flex;align-items:center;justify-content:center;flex-direction:column}
         .overlay-title{position:relative;z-index:4}
-        #img-joysick{position:relative;z-index:5;pointer-events:auto;width:1300px;height:300px}
+        /* keep joysick large but responsive: cap at 1300px, otherwise fit viewport */
+        #img-joysick{position:relative;z-index:5;pointer-events:auto;max-width:1300px;width:min(1300px,96vw);height:auto;margin-top:64px;display:block;margin-left:auto;margin-right:auto}
         /* Make circular text and related SVG interactive above the canvas */
         #container-circular-text{position:relative;z-index:6;pointer-events:auto}
         #container-circular-text svg, #container-circular-text textPath{pointer-events:auto}
@@ -206,8 +224,8 @@
         section#about{padding-top:12px;padding-bottom:18px;margin-top:-32px}
         header .shape{margin-bottom:-36px}
         .container-about{max-width:720px;margin:0 auto;padding:6px 12px}
-        .typing-demo{margin-top:6px;margin-bottom:6px}
-        .marquee{margin-top:6px}
+        .strike-wrap{display:block;margin-top:44px}
+        .typing-demo{margin-top:44px;margin-bottom:6px}
         /* remove extra gap below marquee and tighten spacing into the work section */
         .marquee{margin-bottom:0;padding-bottom:0}
         section#about{padding-bottom:6px;margin-bottom:0}
@@ -215,6 +233,77 @@
         /* Hide the stylized subtitle when requested */
         .overlay-title-new{display:none !important}
     </style>
+
+    <script>
+    // Position the "click me" callout next to the joysick image (arrow target)
+    (function(){
+        const callout = document.querySelector('.joysick-callout');
+        const core = document.getElementById('img-joysick');
+        const overlay = core ? core.closest('.overlay') : document.querySelector('.overlay');
+        if(!callout || !core || !overlay) return;
+
+        function placeCallout(){
+            // small upward nudge to position the callout closer to the flower mouth
+            const verticalNudge = -118; // negative moves up; adjust as needed
+            // compute placement relative to the overlay so it stays next to the image even when scrolled
+            const c = core.getBoundingClientRect();
+            const o = overlay.getBoundingClientRect();
+            // target the flower head (use proportions of the image)
+            const tx = Math.round(c.left + c.width * 0.52 + 4); // page coords
+            const ty = Math.round(c.top + c.height * 0.12 - 4); // page coords
+            const relX = tx - o.left;
+            const relY = (ty - o.top) + verticalNudge;
+
+            // If on very small screens, keep the relative flow but apply a negative margin to nudge visually
+            if(window.innerWidth <= 768){
+                callout.style.position = '';
+                callout.style.left = '';
+                callout.style.top = '';
+                callout.style.right = '';
+                callout.style.setProperty('margin-top', verticalNudge + 'px', 'important');
+                return;
+            }
+
+            // apply absolute placement and force the inline values with priority so CSS rules can't override
+            callout.style.position = 'absolute';
+            callout.style.setProperty('left', Math.round(relX) + 'px', 'important');
+            callout.style.setProperty('top', Math.round(relY) + 'px', 'important');
+            // increase callout width for readability
+            callout.style.minWidth = '120px';
+            callout.style.padding = '10px 14px';
+            callout.style.fontSize = '14px';
+            callout.style.right = '';
+        }
+
+        // run on load/resize/orientation
+        window.addEventListener('resize', placeCallout);
+        window.addEventListener('orientationchange', placeCallout);
+        window.addEventListener('load', ()=> setTimeout(placeCallout,80));
+        // initial attempt
+        setTimeout(placeCallout,60);
+    })();
+    </script>
+
+    <script>
+    // Toggle center menu on small screens using the mini-pill
+    document.addEventListener('DOMContentLoaded', function(){
+        var pill = document.getElementById('miniPill');
+        var menu = document.getElementById('centerMenu');
+        if(!pill || !menu) return;
+        function openMenu(){ menu.classList.add('open'); pill.setAttribute('aria-expanded','true'); }
+        function closeMenu(){ menu.classList.remove('open'); pill.setAttribute('aria-expanded','false'); }
+        pill.addEventListener('click', function(e){
+            if(window.innerWidth <= 768){ menu.classList.toggle('open'); pill.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false'); }
+        });
+        pill.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); pill.click(); } });
+        // close when clicking outside
+        document.addEventListener('click', function(e){ if(window.innerWidth <= 768){ if(!pill.contains(e.target) && !menu.contains(e.target)) closeMenu(); } });
+        // close on link click
+        menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ closeMenu(); }); });
+        // close on escape
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+    });
+    </script>
 
     <style>
         /* Make the work/projects list scroll horizontally for horizontal browsing */
@@ -345,9 +434,51 @@
             </svg>
         </div>
 
-        <div class="overlay">
-            <img id="img-joysick" src="assets/imgs/Logo-idle.png" onclick="ChangeImage()" alt="">           
-        </div>
+    <style>
+        .overlay{position:relative}
+        /* place bubble below the joysick image so it looks like the flower is talking */
+        .joysick-bubble{position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);background:#fff;color:#111;padding:12px 14px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.14);font-family:'Syne Mono',monospace;font-size:14px;line-height:1.25;max-width:360px;text-align:left;z-index:9999;pointer-events:none}
+        /* caret pointing upward toward the image */
+        .joysick-bubble:after{content:'';position:absolute;left:50%;top:-10px;margin-left:-8px;border-width:0 8px 10px 8px;border-style:solid;border-color:transparent transparent #fff transparent;filter:drop-shadow(0 4px 8px rgba(0,0,0,.06))}
+        .joysick-callout{position:relative;right:-20%;top:-700%;transform:translateY(-6px);background:#fff;color:#111;padding:8px 12px;border-radius:14px;border:1px solid rgba(0,0,0,0.9);box-shadow:0 6px 14px rgba(0,0,0,0.08);font-family:'Syne Mono',monospace;font-weight:700;font-size:13px;cursor:pointer;z-index:10000;pointer-events:auto}
+        .joysick-callout:focus{outline:2px solid rgba(0,0,0,0.06);outline-offset:4px}
+        .joysick-callout{animation:calloutPulse 2200ms ease-in-out infinite}
+        /* folded square tail on the left side, vertically centered */
+        .joysick-callout:after{
+            content:'';
+            position:absolute;
+            left:-6px;
+            top:50%;
+            width:16px;
+            height:16px;
+            transform:translateY(-50%) rotate(-45deg);
+            background:#fff;
+            border-width:1px;
+            border-style:solid;
+            /* keep left/top outline, make right/bottom transparent for folded-tail look */
+            border-color: rgba(0,0,0,0.9) transparent transparent rgba(0,0,0,0.9);
+            box-shadow:0 4px 8px rgba(0,0,0,0.06);
+            pointer-events:none;
+        }
+        @keyframes calloutPulse{0%{transform:translateY(-6px) scale(1)}50%{transform:translateY(-10px) scale(1.03)}100%{transform:translateY(-6px) scale(1)}}
+        
+        @media (max-width:1024px){ .joysick-bubble{max-width:300px;padding:10px 12px;font-size:13px} }
+        @media (max-width:768px){
+            /* show bubble as a caption below the image on small screens */
+            .joysick-bubble{position:relative;left:auto;bottom:auto;transform:none;display:block;margin:12px auto 0 auto;pointer-events:none;max-width:92%;text-align:center}
+            /* keep overlay absolute so feature-cards can still be positioned around the core; make overlay area tall enough for placement */
+            .cards-overlay{position:absolute;inset:0;height:920px;pointer-events:none;overflow:visible}
+            .feature-card{position:absolute;transform:translate(-50%,-50%);display:flex;padding:6px}
+            .cards-lines{display:block}
+            /* enlarge joysick image on smaller devices to keep it visually prominent */
+            #img-joysick{width:100vw;max-width:none;margin-top:8px;margin-left:calc(-50vw + 50%);}
+        }
+        @media (max-width:420px){ .joysick-bubble{font-size:12px;padding:8px 10px;max-width:92%} }
+        /* On very wide screens, use the original fixed display size for visual consistency */
+        @media (min-width:1400px){
+            #img-joysick{width:1300px;height:300px}
+        }
+    </style>
 
     <script>
     // Respect prefers-reduced-motion by removing the SVG animation if requested
@@ -408,88 +539,103 @@
     <section  id="about" class="section pt-0">
         <img class = "avatar" src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Round&facialHairType=MoustacheFancy&facialHairColor=Blonde&clotheType=CollarSweater&clotheColor=Gray01&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light'/>
         <div class="container-about">
+            <img id="img-joysick" src="assets/imgs/Logo-idle.png" onclick="ChangeImage()" alt="">           
+                <!--<div class="joysick-bubble" role="note"></div>-->
+                <button type="button" class="joysick-callout" aria-label="click me" onclick="document.getElementById('img-joysick').dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}))">click me!</button>
             <h1>
                 <span class="strike-wrap">
-                    <span class="strike-text">The Thing You Want</span>
+                    <span class="strike-text">Standard things</span>
                     <span class="strike-line"></span>
                 </span>
                 <div class="typing-demo">
                     I turn your ideas into creative impacts.
                 </div>
             </h1>
+            <!-- Feature cards (placed around typing demo) -->
+                    <div class="cards-overlay" aria-hidden="false">
+                        <svg class="cards-lines" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true"></svg>
+                        <div class="feature-card" style="--x:5%;  --y:8%;  --r:-3deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-keyframe.png" alt="icon"></div>
+                            <span class="feature-card-title">Graphic Design</span>
+                        </div>
+                        <div class="feature-card" style="--x:28%; --y:2%;  --r:2deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-flower.png" alt="icon"></div>
+                            <span class="feature-card-title">Illustration</span>
+                        </div>
+                        <div class="feature-card" style="--x:80%; --y:3%;  --r:4deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-circle.png" alt="icon"></div>
+                            <span class="feature-card-title">Animation</span>
+                        </div>
+                        <div class="feature-card" style="--x:55%; --y:5%;  --r:-1deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-diamond.png" alt="icon"></div>
+                            <span class="feature-card-title">UI/UX</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:12%; --y:32%; --r:2deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-star.png" alt="icon"></div>
+                            <span class="feature-card-title">Game Developer</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:40%; --y:28%; --r:-4deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-circles.png" alt="icon"></div>
+                            <span class="feature-card-title">C#</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:68%; --y:30%; --r:1deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-sparkle.png" alt="icon"></div>
+                            <span class="feature-card-title">Javascript</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:3%;  --y:58%; --r:-2deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-wobble.png" alt="icon"></div>
+                            <span class="feature-card-title">HTML</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:30%; --y:55%; --r:3deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/3D-hoop.png" alt="icon"></div>
+                            <span class="feature-card-title">CSS</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:58%; --y:60%; --r:-3deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-morph.png" alt="icon"></div>
+                            <span class="feature-card-title">Web Developer</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:82%; --y:55%; --r:2deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-label.png" alt="icon"></div>
+                            <span class="feature-card-title">Unity</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:18%; --y:82%; --r:-1deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-lock.png" alt="icon"></div>
+                            <span class="feature-card-title">Python</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:48%; --y:85%; --r:3deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/3D-cone.png" alt="icon"></div>
+                            <span class="feature-card-title">Affinity</span>
+                        </div>
+
+                        <div class="feature-card" style="--x:75%; --y:80%; --r:-2deg">
+                            <div class="feature-card-icon"><img src="https://assets.codepen.io/16327/2D-windmill.png" alt="icon"></div>
+                            <span class="feature-card-title">Visual Studio Code</span>
+                        </div>
+                    </div>
 
 
             <!--<h6 class="section-title text-center">I'm Marco</h6>-->
             
             <!--<h6 class="section-subtitle text-center mb-5 pb-3">I turn your ideas into creative impacts.</h6>-->
         </div>
-        <!--<div class="wrapper-card">
-            <i class="fas fa-angle-left" id="left"></i>
-            <ul class="cards-carousel">       
-                <li class="card">
-                    <div class="card-1">
-                        <h1>Hello</h1>
-                        <div class ="card-1-container">
-                        </div>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-2">
-                        <h1>Hello</h1>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-3">
-                        <h1>Hello</h1>
-                        <div class ="card-3-container">
-                        </div>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-4">
-                        <h1>Hello</h1>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-5">
-                        <h1>Hello</h1>
-                        <div class ="card-5-container">
-                        </div>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-3">
-                        <h1>Hello</h1>
-                        <div class ="card-3-container">
-                        </div>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-4">
-                        <h1>Hello</h1>
-                        <div class ="card-4-container">
-                        </div>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-1">
-                        <h1>Hello</h1>
-                        <div class ="card-1-container">
-                        </div>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-2">
-                        <h1>Hello</h1>         
-                    </div>
-                </li>
-            </ul>
-            <i class="fas fa-angle-right" id="right"></i>
-        </div><br><br>-->
 
+        <!-- marquee moved to its own section below -->
+    </section>
+    <!-- End OF Service Section -->
+
+    <section id="marquee-section" class="section"> 
         <div class="marquee">
-            <div class="scroll">
-                <div>
+            <div class="marquee-track">
+                <div class="scroll">
                     <h3 class="category">Game Developer</h3>
                     <h3 class="category">Web Developer</h3>
                     <h3 class="category">Graphic Design</h3>
@@ -499,7 +645,7 @@
                     <h3 class="category">HTML</h3>
                     <h3 class="category">CSS</h3>
                 </div>
-                <div>
+                <div class="scroll">
                     <h3 class="category">Game Developer</h3>
                     <h3 class="category">Web Developer</h3>
                     <h3 class="category">Graphic Design</h3>
@@ -510,9 +656,72 @@
                     <h3 class="category">CSS</h3>
                 </div>
             </div>
-        </div>
+        </div>   
     </section>
-    <!-- End OF Service Section -->
+
+    <style>
+        /* Feature cards positioned around entire about section */
+        /* ensure the about section is the positioning context and give more vertical room */
+        #about{position:relative; min-height:720px; padding-top:64px; padding-bottom:160px; background-color:#fffaf0; border-top:1px solid rgba(0,0,0,0.04); border-bottom:1px solid rgba(0,0,0,0.04)}
+
+        /* overlay covers the whole about area so cards can be placed anywhere */
+        .cards-overlay{
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            top:0;left:0;
+            pointer-events:none; /* allow underlying UI except cards */
+            z-index:6;
+        }
+
+        /* SVG connecting lines sits behind the cards */
+        .cards-lines{ position:absolute; inset:0; width:100%; height:100%; z-index:5; pointer-events:none; overflow:visible }
+        .cards-lines path{ stroke:rgba(0,0,0,0.12); stroke-width:1.2; fill:none; stroke-linecap:round; stroke-linejoin:round }
+        .cards-lines .core-ring{ stroke:rgba(0,0,0,0.06); stroke-width:2; fill:none }
+
+        .feature-card{
+            position:absolute;
+            left:var(--x);
+            top:var(--y);
+            transform:translate(-50%,-50%) rotate(var(--r));
+            display:flex;align-items:center;gap:10px;
+            max-width:140px;
+            pointer-events:none; /* do not block underlying page by default */
+            z-index:7;
+            transition:transform .18s ease, box-shadow .18s ease;
+        }
+        .feature-card:hover{ transform:translate(-50%,-50%) scale(1.03) rotate(var(--r)); box-shadow:0 18px 40px rgba(0,0,0,.12) }
+        .feature-card-icon{ pointer-events:auto; cursor:grab; display:inline-flex; align-items:center; }
+        .feature-card.dragging .feature-card-icon{ cursor:grabbing }
+        .feature-card-icon img{width:44px;height:44px;display:block}
+        .feature-card-title{font-family:'Syne Mono', monospace; font-weight:700; font-size:13px; color:#111; letter-spacing:0.2px}
+
+        /* Mobile: move cards into normal flow below typing demo for accessibility */
+        @media (max-width:768px){
+            /* keep overlay positioned so feature-cards stay around the core on mobile */
+            .cards-overlay{position:absolute;inset:0;height:920px;pointer-events:none;overflow:visible}
+            .feature-card{position:absolute;transform:translate(-50%,-50%);display:flex;padding:6px}
+            .cards-lines{display:block}
+            /* enlarge joysick image on smaller devices to keep it visually prominent */
+            #img-joysick{width:100vw;max-width:none;margin-top:8px;margin-left:calc(-50vw + 50%);}
+        }
+
+        /* CSS fallback float for small devices where JS float may be unreliable */
+        @media (max-width:920px){
+            @keyframes floatSmall {
+                0%{ transform: translate(-50%,-50%) translate(0px,0px) rotate(var(--r)); }
+                50%{ transform: translate(-50%,-50%) translate(6px,-6px) rotate(var(--r)); }
+                100%{ transform: translate(-50%,-50%) translate(0px,0px) rotate(var(--r)); }
+            }
+            .feature-card{ animation: floatSmall 4.6s ease-in-out infinite; }
+            .feature-card:nth-child(3n){ animation-duration:5.2s }
+            .feature-card:nth-child(4n){ animation-duration:4.2s }
+            .feature-card:nth-child(2n){ animation-delay:0.36s }
+            .feature-card:nth-child(3n+1){ animation-delay:0.12s }
+            .feature-card:hover{ animation-play-state:paused }
+        }
+    </style>
 
     <script>
     // Move header JOYSICK image and subtitle down to replace avatar
@@ -883,8 +1092,74 @@
     </section>
     <!-- End OF Mini Game Section -->
 
+    <!-- Contact / Waitlist Section (added under mini-game) -->
+    <section id="contact" class="section contact-section">
+        <div class="container contact-hero">
+            <div class="contact-left">
+                <h1 class="contact-title">JOYSICK</h1>
+            </div>
+            <aside class="contact-right">
+                <div class="contact-meta">JOYSICK - KOWLOON, HONG KONG</div>
+                <p class="contact-desc">Coffee, food, and somewhere to actually sit.<br/></p>
+                <div class="contact-note">OPENING WINTER 2026</div>
+            </aside>
+        </div>
+
+        <div class="container contact-list">
+            <h6 class="section-subtitle">GET ON THE LIST</h6>
+            <form id="waitlist-form" class="waitlist-form" action="#" onsubmit="return false;">
+                <input id="waitlist-email" type="email" placeholder="your@email.com" aria-label="email">
+                <button id="waitlist-submit" class="btn btn-primary">I'M IN</button>
+            </form>
+        </div>
+
+        <div class="container contact-footer">
+            <p class="small">One email, the day before we open. Free coffee for early signups.</p>
+            <div class="year">2026</div>
+        </div>
+    </section>
+
     <!-- Recording indicator (used by sketch) -->
     <div id="recording-indicator" style="display:none;position:fixed;top:20px;left:20px;color:#fff;font-weight:700;z-index:999;padding:8px;background:rgba(0,0,0,.4);border-radius:6px"> <span id="recording-time">REC: 24.0s</span></div>
+
+    <style>
+        /* Contact / Waitlist styles */
+        /* off-white background sampled from provided art direction */
+        /* use off-white as a background 'image' so it behaves consistently */
+        .contact-section{background:#f5efe6;border-top:1px solid #e6dfd6;padding:36px 0;background-image:linear-gradient(#f5efe6,#f5efe6);background-repeat:no-repeat}
+        .contact-hero{display:flex;gap:24px;align-items:stretch}
+        .contact-left{flex:1;display:flex;align-items:center}
+        .contact-title{font-size:9vw;margin:0;line-height:.9;font-weight:900;color:#111;font-family: 'Poppins', sans-serif}
+        .contact-right{width:360px;padding:22px;border-left:1px solid rgba(0,0,0,0.06);display:flex;flex-direction:column;justify-content:center}
+        .contact-meta{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#222;margin-bottom:18px}
+        .contact-desc{font-size:18px;color:#222;margin-bottom:18px}
+        .contact-note{font-size:12px;color:#222;text-transform:uppercase;text-align:right}
+        .contact-list{padding:26px 0;display:flex;flex-direction:column;gap:14px}
+        .waitlist-form{display:flex;gap:12px;max-width:640px}
+        .waitlist-form input{flex:1;padding:12px 14px;border:1px solid #ddd;border-radius:4px;font-size:16px}
+        .waitlist-form .btn{padding:12px 18px;background:#0a0a0a;color:#fff;border:none;border-radius:4px;font-weight:800;cursor:pointer}
+        .contact-footer{display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid #e6dfd6;margin-top:8px}
+        .contact-footer .small{color:#444;font-size:14px;margin:0}
+        .contact-footer .year{font-weight:800}
+        @media (max-width:900px){.contact-hero{flex-direction:column}.contact-right{width:100%;border-left:none;border-top:1px solid rgba(0,0,0,0.04);padding-top:12px}}
+    </style>
+
+    <script>
+        (function(){
+            const btn = document.getElementById('waitlist-submit');
+            const input = document.getElementById('waitlist-email');
+            if(btn && input){
+                btn.addEventListener('click', function(){
+                    const email = input.value.trim();
+                    if(!email || !email.includes('@')){ alert('Please enter a valid email'); input.focus(); return; }
+                    btn.innerText = "THANKS";
+                    btn.disabled = true;
+                    // placeholder: send to API or store locally
+                    console.log('waitlist signup:', email);
+                });
+            }
+        })();
+    </script>
 
     <!-- Header soft string sketch -->
     <script>
@@ -909,6 +1184,27 @@
         recordVideo: () => { if (!isRecording) startRecording(); },
         reset: () => { strings = []; initStrings(); }
     };
+
+    // device breakpoint defaults for max spawned soft-strings
+    function deviceMaxStrings(winW){
+        if(winW >= 1400) return 60; // very large desktops
+        if(winW >= 1200) return 48; // large desktops
+        if(winW >= 992) return 32;  // desktop / laptop
+        if(winW >= 768) return 20;  // tablet
+        if(winW >= 420) return 10;  // large phone
+        return 6;                    // small phones
+    }
+
+    function applyDeviceLimits(){
+        const w = window.innerWidth || document.documentElement.clientWidth;
+        const devMax = deviceMaxStrings(w);
+        // apply without overwriting user-changed max if it's larger — but respect device cap
+        settings.maxStrings = Math.min(settings.maxStrings || devMax, devMax);
+        // ensure minStrings is not greater than max
+        if(settings.minStrings > settings.maxStrings) settings.minStrings = settings.maxStrings;
+        // trim current strings if needed
+        if(strings.length > settings.maxStrings) strings.length = settings.maxStrings;
+    }
 
     const palette = ['#eb4e28','#1e4b9d','#f5dec0','#dfa6e0','#8fb6ae','#8d98c6','#19242d','#111617'];
     let currentBgColor;
@@ -948,7 +1244,12 @@
             window.gui.add(settings, 'reset').name('Reset Scene');
             window.gui.hide();
         }catch(e){/* gui optional */}
+        // apply device-specific limits then initialize
+        applyDeviceLimits();
         initStrings();
+        // re-apply device limits on resize/orientation changes
+        window.addEventListener('resize', applyDeviceLimits);
+        window.addEventListener('orientationchange', applyDeviceLimits);
     }
 
     function initStrings(){
@@ -1091,236 +1392,6 @@
     })();
     </script>
 
-    <!-- Header color detector removed -->
-
-        <!-- Brand inversion/brightness detection removed -->
-
-
-    <!-- Portfolio Section
-    <section id="portfolio" class="section portfolio-section">
-        <div class="container">
-            <h6 class="section-title text-center">Our Portfolio</h6>
-            <h6 class="section-subtitle mb-5 text-center">New stunning projects for our amazing clients</h6>
-            <div class="filters">
-                <a href="#" data-filter=".new" class="active">
-                    New
-                </a>
-                <a href="#" data-filter=".advertising">
-                    Advertising
-                </a>
-                <a href="#" data-filter=".branding">
-                    Branding
-                </a>
-                <a href="#" data-filter=".web">
-                    Web
-                </a>
-            </div>
-            <div class="portfolio-container"> 
-                <div class="col-md-6 col-lg-4 web new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/web-1.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/web-1.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">WEB</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>   
-                    </div>             
-                </div>
-                <div class="col-md-6 col-lg-4 web new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/web-2.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/web-2.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">WEB</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div> 
-                    </div>                         
-                </div>
-                <div class="col-md-6 col-lg-4 advertising new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/advertising-2.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">                         
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/advertising-2.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">ADVERSTISING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>    
-                    </div>              
-                </div> 
-                <div class="col-md-6 col-lg-4 web">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/web-4.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/web-4.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">WEB</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                     
-                </div>
-
-                <div class="col-md-6 col-lg-4 advertising"> 
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/advertising-1.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">                               
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/advertising-1.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">ADVERSITING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                       
-                </div> 
-                <div class="col-md-6 col-lg-4 web new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/web-3.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">  
-                       <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/web-3.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">WEB</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                     
-                </div>
-                <div class="col-md-6 col-lg-4 advertising new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/advertising-3.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">       
-                       <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/advertising-3.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">ADVERSITING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                       
-                </div> 
-                <div class="col-md-6 col-lg-4 advertising new"> 
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/advertising-4.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">            
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/advertising-4.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">ADVERTISING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>
-                            
-                </div> 
-                <div class="col-md-6 col-lg-4 branding new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/branding-1.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">                        
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/branding-1.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">BRANDING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div> 
-                    </div>
-                </div> 
-                <div class="col-md-6 col-lg-4 branding">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/branding-2.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">  
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/branding-2.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">BRANDING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                     
-                </div> 
-                <div class="col-md-6 col-lg-4 branding new">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/branding-3.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">   
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/branding-3.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">BRANDING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                    
-                </div> 
-                <div class="col-md-6 col-lg-4 branding">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/branding-4.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">                      
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/branding-4.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">BRANDING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                      
-                </div> 
-                <div class="col-md-6 col-lg-4 branding">
-                    <div class="portfolio-item">
-                        <img src="assets/imgs/branding-5.jpg" class="img-fluid" alt="Download free bootstrap 4 admin dashboard, free boootstrap 4 templates">          
-                        <div class="content-holder">
-                            <a class="img-popup" href="assets/imgs/branding-5.jpg"></a>
-                            <div class="text-holder">
-                                <h6 class="title">BRANDING</h6>
-                                <p class="subtitle">Expedita corporis doloremque velit in totam!</p>
-                            </div>
-                        </div>
-                    </div>                                                   
-                </div>
-            </div>   
-        </div>            
-    </section>
-    End of portfolio section -->
-
-    <!-- Blog Section 
-    <section class="section" id="blog">
-        <div class="container">
-            <h6 class="section-title mb-0 text-center">Latest Articles</h6>
-            <h6 class="section-subtitle mb-5 text-center">Architecto provident deserunt eveniet libero</h6>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card border-0 mb-4">
-                        <img src="assets/imgs/blog-1.jpg" alt="" class="card-img-top w-100">
-                        <div class="card-body">                         
-                            <h6 class="card-title">Pariatur Omnis Harum quae sint.</h6>
-                            <p>Fuga quae ratione inventore Perferendis porro.</p>
-                            <a href="javascript:void(0)" class="small text-muted">Go To The Article</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 mb-4">
-                        <img src="assets/imgs/blog-2.jpg" alt="" class="card-img-top w-100">
-                        <div class="card-body">                         
-                            <h6 class="card-title"> Harum Quae Porro</h5>
-                            <p>Fuga quae ratione inventore Perferendis porro.</p>
-                            <a href="javascript:void(0)" class="small text-muted">Go To The Article</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 mb-4">
-                        <img src="assets/imgs/blog-3.jpg" alt="" class="card-img-top w-100">
-                        <div class="card-body">                         
-                            <h6 class="card-title">Qui optio neque alias</h6>
-                            <p>Fuga quae ratione inventore Perferendis porro.</p>
-                            <a href="javascript:void(0)" class="small text-muted">Go To The Article</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    End of Blog Section -->
-
     <!-- Contact Section -->
     <footer>
         <section id="contact" class="section has-img-bg pb-0">
@@ -1348,5 +1419,295 @@
             </div>
         </section>
     </footer>
+</style>
+    <style>
+        .feature-card.dragging{ cursor:grabbing; transform:translate(-50%,-50%) scale(1.02) rotate(var(--r)); transition:none; box-shadow:0 24px 60px rgba(0,0,0,.18) }
+    </style>
+
+    <script>
+    // Drag & drop for feature cards (desktop)
+    (function(){
+        const overlay = document.querySelector('.cards-overlay');
+        if(!overlay) return;
+        const cards = Array.from(overlay.querySelectorAll('.feature-card'));
+        // disable floating only on unrealistically tiny viewports; set to 0 to keep float enabled
+        const mobileBreakpoint = 0;
+        let draggingEl = null;
+        let overlayRect = null;
+
+        function toPercent(val, total){ return (Math.max(0, Math.min(1, val/total)) * 100).toFixed(2) + '%'; }
+
+        let activeHandle = null;
+        cards.forEach(card => {
+            const handle = card.querySelector('.feature-card-icon') || card;
+            handle.style.touchAction = 'none';
+            handle.addEventListener('pointerdown', function onDown(e){
+                if(window.innerWidth <= mobileBreakpoint) return; // disable on small screens
+                draggingEl = card;
+                activeHandle = handle;
+                overlayRect = overlay.getBoundingClientRect();
+                try{ handle.setPointerCapture(e.pointerId); }catch(err){}
+                card.classList.add('dragging');
+                document.addEventListener('pointermove', onMove);
+                document.addEventListener('pointerup', onUp, {once:true});
+                e.preventDefault();
+            });
+        });
+
+        function onMove(e){
+            if(!draggingEl) return;
+            const x = e.clientX - overlayRect.left;
+            const y = e.clientY - overlayRect.top;
+            const px = toPercent(x, overlayRect.width);
+            const py = toPercent(y, overlayRect.height);
+            draggingEl.style.setProperty('--x', px);
+            draggingEl.style.setProperty('--y', py);
+        }
+
+        function onUp(e){
+            if(!draggingEl) return;
+            try{ if(activeHandle) activeHandle.releasePointerCapture(e.pointerId); }catch(err){}
+            draggingEl.classList.remove('dragging');
+            document.removeEventListener('pointermove', onMove);
+            draggingEl = null; activeHandle = null;
+        }
+    })();
+
+    // Floating gentle motion for feature-cards
+    (function(){
+        const overlay = document.querySelector('.cards-overlay');
+        if(!overlay) return;
+        const cards = Array.from(overlay.querySelectorAll('.feature-card'));
+        if(!cards.length) return;
+        const mobileBreakpoint = 768;
+        const amplitudes = new Map();
+        const speeds = new Map();
+        const phases = new Map();
+
+        // initialize per-card params and base positions
+        cards.forEach((card,i)=>{
+            const cs = getComputedStyle(card);
+            const baseX = parseFloat(cs.getPropertyValue('--x')) || 50;
+            const baseY = parseFloat(cs.getPropertyValue('--y')) || 50;
+            card.dataset.baseX = baseX;
+            card.dataset.baseY = baseY;
+            // smaller amplitude and slower speeds for gentler floating
+            amplitudes.set(card, 0.4 + Math.random()*1.2); // percent amplitude
+            speeds.set(card, 0.04 + Math.random()*0.18); // cycles per second (slower)
+            phases.set(card, Math.random()*Math.PI*2);
+            // track dragging state via the icon handle (card itself is pointer-events:none)
+            const handle = card.querySelector('.feature-card-icon') || card;
+            handle.addEventListener('pointerdown', ()=> card.dataset._drag='1');
+            handle.addEventListener('pointerup', ()=>{
+                card.dataset._drag='0';
+                // store new base position on release
+                const cs2 = getComputedStyle(card);
+                card.dataset.baseX = parseFloat(cs2.getPropertyValue('--x')) || card.dataset.baseX;
+                card.dataset.baseY = parseFloat(cs2.getPropertyValue('--y')) || card.dataset.baseY;
+            });
+        });
+
+        let rafId = null;
+        function animate(t){
+            if(window.innerWidth <= mobileBreakpoint){
+                // restore base positions on mobile and skip animation
+                cards.forEach(card=>{
+                    card.style.setProperty('--x', (card.dataset.baseX || 50) + '%');
+                    card.style.setProperty('--y', (card.dataset.baseY || 50) + '%');
+                });
+                rafId = requestAnimationFrame(animate);
+                return;
+            }
+            const now = t/1000;
+            cards.forEach(card=>{
+                if(card.dataset._drag === '1' || card.classList.contains('dragging')) return;
+                const baseX = parseFloat(card.dataset.baseX) || 50;
+                const baseY = parseFloat(card.dataset.baseY) || 50;
+                // reduce motion slightly on smaller devices for subtle effect
+                let amp = amplitudes.get(card) || 1.6;
+                let sp = speeds.get(card) || 0.6;
+                if(window.innerWidth <= 920){
+                    // make floating gentler on narrow viewports
+                    amp = amp * 0.75;
+                    sp = sp * 0.9;
+                }
+                const ph = phases.get(card) || 0;
+                const dx = Math.sin(now * sp * 2 * Math.PI + ph) * amp;
+                const dy = Math.cos(now * sp * 2 * Math.PI + ph * 0.7) * (amp * 0.55);
+                const nx = baseX + dx;
+                const ny = baseY + dy;
+                card.style.setProperty('--x', nx.toFixed(2) + '%');
+                card.style.setProperty('--y', ny.toFixed(2) + '%');
+            });
+            rafId = requestAnimationFrame(animate);
+        }
+
+        rafId = requestAnimationFrame(animate);
+        // pause animation when page hidden to save CPU
+        document.addEventListener('visibilitychange', ()=>{
+            if(document.hidden){ if(rafId) cancelAnimationFrame(rafId); rafId = null; }
+            else if(!rafId) rafId = requestAnimationFrame(animate);
+        });
+    })();
+
+    </script>
+    <script>
+    // Draw straight connectors from each feature-card to the joysick image (core)
+    (function(){
+        const overlay = document.querySelector('.cards-overlay');
+        const svg = overlay ? overlay.querySelector('.cards-lines') : null;
+        const coreEl = document.getElementById('img-joysick');
+        if(!overlay || !svg) return;
+        const ns = 'http://www.w3.org/2000/svg';
+        const rings = [];
+
+        // no core rings (removed)
+
+        function getCenterInOverlay(el){
+            const r = el.getBoundingClientRect();
+            const o = overlay.getBoundingClientRect();
+            return { x: (r.left + r.width/2) - o.left, y: (r.top + r.height/2) - o.top };
+        }
+
+        // Arrange cards in a circle around the core
+        function arrangeCards(){
+            const cards = Array.from(overlay.querySelectorAll('.feature-card'));
+            if(!cards.length) return;
+            const core = coreEl ? getCenterInOverlay(coreEl) : { x: overlay.clientWidth/2, y: overlay.clientHeight/2 };
+            const orect = overlay.getBoundingClientRect();
+            const w = orect.width; const h = orect.height;
+            // compute core radius and card size to avoid overlapping the core
+            const coreRect = coreEl ? coreEl.getBoundingClientRect() : { width:80, height:80 };
+            const coreRadius = Math.max(coreRect.width, coreRect.height) / 2;
+            const maxCardDim = Math.max(...cards.map(c=> Math.max(c.offsetWidth||120, c.offsetHeight||48)));
+            const minRadius = coreRadius + (maxCardDim/2) + 1; // tighter padding from core
+            const radius = Math.max(minRadius, Math.min(w,h) * 0.02); // base circle multiplier to bring cards even closer
+            // maximum allowed distance from core for any card (pixels)
+            const globalMaxRadius = Math.min(w,h) * 0.30; // cap so cards don't drift too far (increased)
+            const start = -Math.PI/2; // start at top
+            const n = cards.length;
+            cards.forEach((card,i)=>{
+                if(card.classList.contains('dragging')) return; // don't override while dragging
+                // small deterministic jitter so cards don't sit perfectly on the circle
+                const jitter = Math.sin(i * 1.234) * 0.12; // radians
+                const angle = start + (i * (Math.PI*2) / n) + jitter;
+                // ensure each card has a stable randomized distance factor (data-rand)
+                if(!card.dataset.rand){
+                    // store -30% .. +30% as default randomized distance factor (can be overridden later)
+                    card.dataset.rand = ((Math.random() * 0.6) - 0.3).toFixed(3);
+                }
+                const randFactor = parseFloat(card.dataset.rand);
+                // compute local radius using the stored random factor and compress toward core slightly
+                let localRadius = Math.max(minRadius, (radius + (radius * randFactor)) * 0.6);
+                // allow per-card override via data-max (pixels), otherwise clamp to global max
+                const cardMax = card.dataset.max ? parseFloat(card.dataset.max) : globalMaxRadius;
+                localRadius = Math.min(localRadius, cardMax);
+                let px = core.x + Math.cos(angle) * localRadius;
+                let py = core.y + Math.sin(angle) * localRadius;
+                // clamp so cards never go outside the overlay
+                const margin = (maxCardDim/2) + 8;
+                px = Math.max(margin, Math.min(w - margin, px));
+                py = Math.max(margin, Math.min(h - margin, py));
+                const pctX = (px / w) * 100; const pctY = (py / h) * 100;
+                card.style.setProperty('--x', pctX.toFixed(2) + '%');
+                card.style.setProperty('--y', pctY.toFixed(2) + '%');
+                // keep cards upright
+                card.style.setProperty('--r', '0deg');
+                card.dataset.baseX = parseFloat(pctX.toFixed(2));
+                card.dataset.baseY = parseFloat(pctY.toFixed(2));
+                card.dataset._rad = localRadius;
+            });
+        }
+
+        let last = 0;
+        const minInterval = 33; // ~30fps
+        function update(t){
+            if(t - last < minInterval){ requestAnimationFrame(update); return; }
+            last = t;
+            const core = coreEl ? getCenterInOverlay(coreEl) : { x: overlay.clientWidth/2, y: overlay.clientHeight/2 };
+            // core rings removed
+
+            // remove old paths (preserve circles at end)
+            // clear everything first
+            while(svg.firstChild){ svg.removeChild(svg.firstChild); }
+
+            // redraw rings will be appended later
+            const cards = Array.from(overlay.querySelectorAll('.feature-card'));
+            cards.forEach((card, idx)=>{
+                // compute card center in overlay
+                const cr = card.getBoundingClientRect();
+                const o = overlay.getBoundingClientRect();
+                const x = (cr.left + cr.width/2) - o.left;
+                const y = (cr.top + cr.height/2) - o.top;
+                // draw straight line
+                const line = document.createElementNS(ns,'path');
+                const d = `M ${x.toFixed(2)} ${y.toFixed(2)} L ${core.x.toFixed(2)} ${core.y.toFixed(2)}`;
+                line.setAttribute('d', d);
+                line.setAttribute('stroke-opacity', 0.95);
+                line.setAttribute('class','conn');
+                svg.appendChild(line);
+            });
+
+            // no rings to append
+
+            requestAnimationFrame(update);
+        }
+
+        // initial arrange and on resize
+        arrangeCards();
+        window.addEventListener('resize', () => { arrangeCards(); });
+        requestAnimationFrame(update);
+        // repel animation: push cards away from the core and KEEP their new positions
+        function repelCards(duration = 700, strength = 0.6){
+            const cards = Array.from(overlay.querySelectorAll('.feature-card'));
+            if(!cards.length) return;
+            const core = coreEl ? getCenterInOverlay(coreEl) : { x: overlay.clientWidth/2, y: overlay.clientHeight/2 };
+            const orect = overlay.getBoundingClientRect();
+            const w = orect.width, h = orect.height;
+            const margin = 12;
+            const vw = window.innerWidth || document.documentElement.clientWidth;
+            // reduce strength on smaller viewports so the push is subtle
+            let localStrength = strength;
+            let minPush = 12; // global minimum push (px) for large screens
+            if(vw <= 420){ localStrength = Math.min(localStrength, 0.18); minPush = 4; }
+            else if(vw <= 768){ localStrength = Math.min(localStrength, 0.4); minPush = 8; }
+            else if(vw <= 920){ localStrength = Math.min(localStrength, 0.7); minPush = 12; }
+
+            cards.forEach(card=>{
+                const cr = card.getBoundingClientRect();
+                const cx = (cr.left + cr.width/2) - orect.left;
+                const cy = (cr.top + cr.height/2) - orect.top;
+                let vx = cx - core.x; let vy = cy - core.y;
+                const len = Math.sqrt(vx*vx + vy*vy) || 1;
+                vx /= len; vy /= len;
+                // compute push distance (viewport-scaled)
+                const push = Math.max(minPush, len * localStrength);
+                const tx = cx + vx * push;
+                const ty = cy + vy * push;
+                let px = Math.max(margin, Math.min(w - margin, tx));
+                let py = Math.max(margin, Math.min(h - margin, ty));
+                const pctX = (px / w) * 100; const pctY = (py / h) * 100;
+                // animate via CSS variables then persist as base positions
+                card.style.transition = `left ${duration}ms cubic-bezier(.22,.9,.35,1), top ${duration}ms cubic-bezier(.22,.9,.35,1)`;
+                card.style.setProperty('--x', pctX.toFixed(2) + '%');
+                card.style.setProperty('--y', pctY.toFixed(2) + '%');
+                card.dataset.baseX = parseFloat(pctX.toFixed(2));
+                card.dataset.baseY = parseFloat(pctY.toFixed(2));
+            });
+            // clear transitions after animation, but DO NOT call arrangeCards() — keep new positions
+            setTimeout(()=>{ cards.forEach(card=>{ card.style.transition = ''; }); }, duration + 50);
+        }
+
+        if(coreEl){
+            coreEl.addEventListener('click', ()=>{
+                if(coreEl.dataset.repelled === '1') return; // only once
+                coreEl.dataset.repelled = '1';
+                repelCards(700, 1.6);
+            });
+        }
+        // ensure layout updates (arrange) run after small style changes
+        setTimeout(()=>{ window.dispatchEvent(new Event('resize')); }, 80);
+    })();
+    </script>
 </body>
 </html>
