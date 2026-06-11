@@ -91,10 +91,10 @@
                     <span class="pill-text">yoo!</span>
                 </div>
                 <ul id="centerMenu" class="center-menu">
-                    <li><a href="#about"><span class="icon">✳️</span><span class="label">about</span></a></li>
-                    <li><a href="#work"><span class="icon">⭐</span><span class="label">work</span></a></li>
-                    <li><a href="#game"><span class="icon">🕹️</span><span class="label">mini game</span></a></li>
-                    <li><a href="#contact"><span class="icon">✉️</span><span class="label">contact</span></a></li>
+                    <li><a href="#about"><span class="dot dot-top" aria-hidden="true"></span><span class="label">r/about</span></a></li>
+                    <li><a href="#work"><span class="dot dot-work" aria-hidden="true"></span><span class="label">r/proj</span></a></li>
+                    <li><a href="#game"><span class="dot dot-game" aria-hidden="true"></span><span class="label">r/mini game</span></a></li>
+                    <li><a href="#contact"><span class="dot dot-contact" aria-hidden="true"></span><span class="label">r/contact</span></a></li>
                 </ul>
             </div>
 
@@ -137,9 +137,27 @@
                     100%{transform:translate(-50%,-50%) scale(.56);box-shadow:0 6px 12px rgba(214,255,0,.14);opacity:.9}
                 }
         .pill-text{font-weight:800;padding-left:4px;color:#333;font-family:'Syne Mono', monospace}
-        .center-menu li a{display:flex;align-items:center;gap:8px;padding:8px 12px;color:#333;text-decoration:none;font-weight:700;border-radius:999px}
-        .center-menu li a .icon{font-size:14px}
-        .center-menu li a .label{text-transform:lowercase;font-size:13px}
+        .center-menu li a{display:flex;flex-direction:row;align-items:center;gap:6px;padding:8px 12px;color:#333;text-decoration:none;font-weight:700;border-radius:999px}
+        .center-menu li a .dot{width:10px !important;height:10px !important;border-radius:999px !important;display:inline-flex !important;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 8px rgba(0,0,0,.06);transition:transform .18s ease, box-shadow .22s ease;transform-origin:center;margin-right:4px;order:0;background:#d8d8d8 !important;border:1px solid rgba(0,0,0,0.04) !important;box-sizing:border-box;position:relative !important;z-index:2}
+        .center-menu li a .dot.dot-purple{background:linear-gradient(135deg,#c58bff,#ff84d1)}
+        /* Per-item dot colors */
+        .center-menu li a .dot.dot-top{background:linear-gradient(135deg,#c58bff,#ff84d1) !important;box-shadow:0 6px 12px rgba(197,139,255,.12) !important}
+        .center-menu li a .dot.dot-work{background:linear-gradient(135deg,#4db6ff,#6acbff) !important;box-shadow:0 6px 12px rgba(77,182,255,.12) !important}
+        .center-menu li a .dot.dot-game{background:linear-gradient(135deg,#ffd166,#ff8a65) !important;box-shadow:0 6px 12px rgba(255,160,80,.12) !important}
+        .center-menu li a .dot.dot-contact{background:radial-gradient(circle at 35% 35%, #ffffff 0%, #ffb5b5 12%, #ff6b6b 48%, #d63b3b 100%) !important;box-shadow:0 6px 10px rgba(214,64,64,.12) !important}
+        /* small solid dots for other items */
+        .center-menu li a .dot-solid{width:10px;height:10px;margin-right:4px;background:#d63b3b;border-radius:999px;box-shadow:0 4px 8px rgba(214,64,64,.08);transition:transform .18s cubic-bezier(.2,.9,.25,1),box-shadow .18s cubic-bezier(.2,.9,.25,1)}
+        .center-menu li a:hover .dot-solid{transform:scale(1.14);box-shadow:0 10px 26px rgba(214,64,64,.16),0 0 30px rgba(255,100,100,.12)}
+        /* red circular indicator matching attached style */
+        .center-menu li a .dot.dot-glow{width:14px;height:14px;margin-right:8px;background:radial-gradient(circle at 35% 35%, #ffffff 0%, #ffb5b5 12%, #ff6b6b 48%, #d63b3b 100%);border-radius:999px;position:relative;box-shadow:0 6px 10px rgba(214,64,64,.12), inset 0 2px 6px rgba(255,255,255,.12);transition:transform .22s cubic-bezier(.2,.9,.25,1), box-shadow .22s cubic-bezier(.2,.9,.25,1)}
+        /* soft halo behind the dot */
+        .center-menu li a .dot-glow::after{content:'';position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 50% 40%, rgba(255,115,115,.18) 0%, rgba(214,64,64,.08) 30%, rgba(214,64,64,0) 65%);filter:blur(6px);opacity:.9;pointer-events:none}
+        /* hover: intensify glow and slightly scale */
+        .center-menu li a:hover .dot-glow{transform:scale(1.18);box-shadow:0 10px 30px rgba(214,64,64,.18), 0 0 36px rgba(255,100,100,.18)}
+        .center-menu li a:hover .dot-glow::after{opacity:1;filter:blur(10px);width:56px;height:56px}
+        @keyframes dotPulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+        .center-menu li a .dot-glow{animation:dotPulse 2400ms ease-in-out infinite}
+        .center-menu li a .label{text-transform:lowercase;font-size:13px;order:1}
         .nav-right{display:flex;align-items:center;gap:12px}
         .nav-right .small-note{color:#333;font-weight:600}
         .nav-right .heart{color:#e53935;margin-left:6px}
@@ -159,7 +177,7 @@
         header .overlay{position:relative;z-index:3;pointer-events:auto;display:flex;align-items:center;justify-content:center;flex-direction:column}
         .overlay-title{position:relative;z-index:4}
         /* keep joysick large but responsive: cap at 1300px, otherwise fit viewport */
-        #img-joysick{position:relative;z-index:5;pointer-events:auto;max-width:1300px;width:min(1300px,96vw);height:auto;margin-top:64px;display:block;margin-left:auto;margin-right:auto}
+        #img-joysick{position:relative;z-index:5;pointer-events:auto;max-width:1500px;width:min(1500px,96vw);height:auto;margin-top:64px;display:block;margin-left:auto;margin-right:auto}
         /* Make circular text and related SVG interactive above the canvas */
         #container-circular-text{position:relative;z-index:6;pointer-events:auto}
         #container-circular-text svg, #container-circular-text textPath{pointer-events:auto}
@@ -185,6 +203,11 @@
         .overlay-title-new .joy-top{font-size:200px; fill:#ffffff}
         /* STUDIO: neon green fill */
         .overlay-title-new .joy-bottom{font-size:200px; fill:#c8ff00}
+        /* Art-style sentence above typing-demo */
+        .art-sentence{max-width:1100px;margin:0 auto 6px;text-align:left}
+        .art-sentence .art-line{display:block;font-weight:900;color:#fff;font-size:clamp(42px,8vw,140px);line-height:0.92;margin:0}
+        .art-sentence .art-line + .art-line{margin-top:-8px}
+        .art-sentence .art-accent{color:#ff4da6;font-style:italic;font-weight:800;font-family: 'Cormorant Garamond', serif;display:inline-block;margin-left:6px}
         /* animate waves inside the clipped title */
         .overlay-title-new .waves{transform-box:fill-box;transform-origin:center;animation:waveMove 6s linear infinite}
         .overlay-title-new .waves2{transform-box:fill-box;transform-origin:center;animation:waveMove2 10s linear infinite}
@@ -223,9 +246,9 @@
         img.avatar{width:140px;height:140px;border-radius:50%;display:block;margin:6px auto 0;object-fit:cover}
         section#about{padding-top:12px;padding-bottom:18px;margin-top:-32px}
         header .shape{margin-bottom:-36px}
-        .container-about{max-width:720px;margin:0 auto;padding:6px 12px}
+        .container-about{max-width:1500px;margin:0 auto;padding:6px 12px}
         .strike-wrap{display:block;margin-top:44px}
-        .typing-demo{margin-top:44px;margin-bottom:6px}
+        .typing-demo{margin-top:44px;margin-bottom:6px;font-size:28px;line-height:1.1}
         /* remove extra gap below marquee and tighten spacing into the work section */
         .marquee{margin-bottom:0;padding-bottom:0}
         section#about{padding-bottom:6px;margin-bottom:0}
@@ -537,16 +560,53 @@
 
     <!-- Service Section -->
     <section  id="about" class="section pt-0">
+        <!-- Window-style top bar (like macOS menu bar) -->
+        <div class="about-window" aria-hidden="true">
+            <div class="window-top">
+                <div class="window-left">
+                    <div class="window-logo"><img src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Round&facialHairType=MoustacheFancy&facialHairColor=Blonde&clotheType=CollarSweater&clotheColor=Gray01&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light" alt="avatar" class="window-logo-img"></div>
+                    <div class="window-controls">
+                        <span class="ctrl ctrl-close" data-label="close"></span>
+                        <span class="ctrl ctrl-min" data-label="minimize"></span>
+                        <span class="ctrl ctrl-max" data-label="maximize"></span>
+                    </div>
+                </div>
+
+                <div class="window-menu">
+                    <a class="menu-pill pink" data-shape="diamond" href="#about">r/about</a>
+                </div>
+
+                <div class="window-right-icons">
+                    <!-- battery icon -->
+                    <svg class="icon icon-batt" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="1" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"></rect><rect x="20" y="9" width="2" height="6" rx="0.6" fill="currentColor"></rect><rect class="batt-level" x="3" y="8" width="12" height="8" rx="1" fill="currentColor"></rect></svg>
+                    <!-- user / avatar icon -->
+                    <svg class="icon icon-user" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="3" fill="currentColor"></circle><path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.2"></path></svg>
+                    <!-- search -->
+                    <svg class="icon icon-search" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="4" fill="none" stroke="currentColor" stroke-width="1.4"></circle><path d="M20 20l-4.35-4.35" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
+                    <!-- wifi (fixed icon) -->
+                    <svg class="icon icon-wifi" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1.42 8a16 16 0 0 1 21.16 0" />
+                        <path d="M5 12.55a11 11 0 0 1 14 0" />
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                        <path d="M12 20.5h0" stroke-width="2.2" />
+                    </svg>
+                    <div class="time" id="window-time">10:45</div>
+                </div>
+            </div>
+            <div class="window-body">
+
         <img class = "avatar" src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Round&facialHairType=MoustacheFancy&facialHairColor=Blonde&clotheType=CollarSweater&clotheColor=Gray01&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light'/>
         <div class="container-about">
-            <img id="img-joysick" src="assets/imgs/Logo-idle.png" onclick="ChangeImage()" alt="">           
+            <img id="img-joysick" src="assets/imgs/Logo-idle2.png" onclick="ChangeImage()" alt="">           
                 <!--<div class="joysick-bubble" role="note"></div>-->
-                <button type="button" class="joysick-callout" aria-label="click me" onclick="document.getElementById('img-joysick').dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}))">click me!</button>
+                <!-- click me callout removed -->
+            <!--<h6 class="section-title text-center">I'm Marco</h6>-->
+
             <h1>
-                <span class="strike-wrap">
-                    <span class="strike-text">Standard things</span>
-                    <span class="strike-line"></span>
-                </span>
+                <div class="art-sentence">
+                    <span class="art-line"></span>
+                    <span class="art-line">Let's build <span class="art-accent">together.</span></span>
+                </div>
                 <div class="typing-demo">
                     I turn your ideas into creative impacts.
                 </div>
@@ -626,6 +686,7 @@
             <!--<h6 class="section-title text-center">I'm Marco</h6>-->
             
             <!--<h6 class="section-subtitle text-center mb-5 pb-3">I turn your ideas into creative impacts.</h6>-->
+            </div>
         </div>
 
         <!-- marquee moved to its own section below -->
@@ -700,11 +761,13 @@
         /* Mobile: move cards into normal flow below typing demo for accessibility */
         @media (max-width:768px){
             /* keep overlay positioned so feature-cards stay around the core on mobile */
-            .cards-overlay{position:absolute;inset:0;height:920px;pointer-events:none;overflow:visible}
+            .cards-overlay{position:absolute;inset:0;height:640px;pointer-events:none;overflow:visible}
             .feature-card{position:absolute;transform:translate(-50%,-50%);display:flex;padding:6px}
             .cards-lines{display:block}
-            /* enlarge joysick image on smaller devices to keep it visually prominent */
-            #img-joysick{width:100vw;max-width:none;margin-top:8px;margin-left:calc(-50vw + 50%);}
+            /* constrain joysick image on smaller devices to avoid full-bleed and excessive height */
+            #img-joysick{width:100%;max-width:360px;margin:8px auto 0;display:block;margin-left:auto;margin-right:auto}
+            /* reduce about section height on small screens */
+            #about{min-height:auto;padding-top:28px;padding-bottom:48px}
         }
 
         /* CSS fallback float for small devices where JS float may be unreliable */
@@ -720,6 +783,101 @@
             .feature-card:nth-child(2n){ animation-delay:0.36s }
             .feature-card:nth-child(3n+1){ animation-delay:0.12s }
             .feature-card:hover{ animation-play-state:paused }
+        }
+
+        /* Window-style top bar for the about section */
+        .about-window{max-width:940px;margin:64px auto 6px;pointer-events:auto; background:linear-gradient(180deg, rgba(10,10,10,0.9), rgba(6,6,6,0.85)); border-radius:26px; padding:12px}
+        .about-window .window-top{display:flex;align-items:center;justify-content:flex-start;padding:8px 14px;background:transparent;border-radius:22px;color:#fff}
+            .about-window .window-body{position:relative;padding:12px 18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));overflow:visible;display:flex;align-items:center;justify-content:center;min-height:360px}
+
+            /* ensure feature-cards and overlay sit above the window body background */
+            .about-window .cards-overlay{z-index:12;position:absolute;inset:0}
+
+            /* center joysick image inside the window and limit its size */
+            .about-window #img-joysick{max-width:320px !important;width:320px !important;height:auto !important;margin:0 !important;display:block}
+
+            /* feature card titles: white to show on dark window */
+            .feature-card-title{font-family:'Syne Mono', monospace; font-weight:700; font-size:13px; color:#fff !important; letter-spacing:0.2px; text-shadow:0 2px 6px rgba(0,0,0,0.6)}
+        .about-window .window-left{display:flex;align-items:center;gap:12px}
+        .about-window .window-logo{width:36px;height:36px;border-radius:999px;background:transparent;color:#000;font-weight:900;display:inline-flex;align-items:center;justify-content:center;font-family:'Syne Mono', monospace;overflow:hidden}
+        .about-window .window-logo img, .about-window .window-logo .window-logo-img{width:100%;height:100%;object-fit:cover;border-radius:999px;display:block}
+        .about-window .window-controls{display:flex;gap:8px;align-items:center}
+        .about-window .ctrl{width:10px;height:10px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,0.06);opacity:0.95}
+        .about-window .ctrl-close{background:#ff5f56}
+        .about-window .ctrl-min{background:#ffbd2e}
+        .about-window .ctrl-max{background:#27c93f}
+        .about-window .window-menu{display:flex;gap:18px;align-items:center;color:rgba(255,255,255,0.95);font-family:'Syne Mono', monospace;font-weight:700;font-size:13px;text-transform:none;letter-spacing:0.02em;margin-left:12px}
+
+        /* Responsive: switch layout on smaller viewports */
+        @media (max-width:900px){
+            .about-window{max-width:96vw;margin:64px auto 16px;padding:10px;border-radius:18px}
+            .about-window .window-top{padding:8px 10px;justify-content:space-between}
+            .about-window .window-menu{margin-left:8px}
+            .about-window .window-body{flex-direction:column;align-items:center;justify-content:flex-start;min-height:auto;gap:18px;padding:12px}
+            .about-window #img-joysick{max-width:320px !important;width:min(320px,60vw) !important;height:auto !important;margin:0 !important}
+            .container-about{padding:4px 8px}
+            .art-sentence{max-width:92vw}
+            .art-sentence .art-line{text-align:center;font-size:clamp(28px,8vw,84px);line-height:1}
+            .typing-demo{text-align:center;margin-top:8px;font-size:20px}
+            /* show scaled-down feature cards on tablet/small screens */
+            .about-window .cards-overlay{display:block;z-index:10;position:absolute;inset:0;pointer-events:none}
+            .about-window .feature-card{transform:translate(-50%,-50%) scale(0.78);opacity:0.95}
+            .about-window .feature-card-icon img{width:32px;height:32px}
+            .about-window .feature-card-title{font-size:12px;text-shadow:none}
+        }
+
+        /* Extra small devices: improve stacking, scale, and spacing */
+        @media (max-width:480px){
+            .about-window{max-width:96vw;margin:32px auto 12px;padding:10px;border-radius:12px}
+            .about-window .window-top{padding:6px 8px;justify-content:space-between;gap:8px}
+            .about-window .window-left{gap:8px}
+            .about-window .window-logo{width:32px;height:32px}
+            .about-window .window-logo img{width:100%;height:100%}
+            .about-window .window-menu{font-size:12px;margin-left:6px;gap:10px}
+            .about-window .window-body{flex-direction:column;align-items:center;justify-content:flex-start;min-height:0;padding:10px;gap:12px}
+            .about-window #img-joysick{max-width:220px !important;width:min(220px,56vw) !important;height:auto !important;margin:0 !important}
+            .art-sentence{padding:0 8px}
+            .art-sentence .art-line{font-size:clamp(20px,8vw,48px);line-height:1;text-align:center;margin:0}
+            .art-sentence .art-line + .art-line{margin-top:0}
+            .art-sentence .art-accent{display:inline-block;font-size:inherit;margin-left:6px}
+            .typing-demo{display:inline-block;max-width:86vw;white-space:normal;overflow-wrap:break-word;font-size:16px;padding:6px 10px;margin-top:6px}
+
+            /* Extra-small fallback for very narrow screens */
+            @media (max-width:360px){
+                .typing-demo{font-size:14px}
+            }
+            .container-about{padding:0}
+            /* show scaled-down feature cards on very small screens */
+            .about-window .cards-overlay{display:block;z-index:10;position:absolute;inset:0;pointer-events:none}
+            .about-window .feature-card{transform:translate(-50%,-50%) scale(0.66);opacity:0.9}
+            .about-window .feature-card-icon img{width:28px;height:28px}
+            .about-window .feature-card-title{font-size:11px}
+            .overlay-title-new .joy-top{font-size:96px}
+        }
+        .about-window .window-menu .menu-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.06);color:#fff;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,0.28);backdrop-filter: blur(4px);--marker-color:#27c93f}
+        .about-window .window-menu .menu-pill:active,.about-window .window-menu .menu-pill:focus{outline:none;transform:translateY(0.5px)}
+        .about-window .window-menu .menu-pill::before{content:'';display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--marker-color);margin-right:8px;box-shadow:0 0 0 4px rgba(0,0,0,0.12)}
+        .about-window .window-menu .menu-pill[data-shape="square"]::before{border-radius:6px;width:10px;height:10px}
+        .about-window .window-menu .menu-pill[data-shape="diamond"]::before{width:10px;height:10px;border-radius:0;transform:rotate(45deg);box-shadow:none}
+        .about-window .window-menu .menu-pill[data-shape="dot"]::before{width:10px;height:10px;border-radius:50%}
+        .about-window .window-menu .menu-pill[data-shape="small-dot"]::before{width:8px;height:8px}
+        .about-window .window-menu .menu-pill[data-shape="bar"]::before{width:4px;height:14px;border-radius:3px}
+        /* color helpers */
+        .about-window .window-menu .menu-pill.green{--marker-color:#27c93f}
+        .about-window .window-menu .menu-pill.red{--marker-color:#ff5f56}
+        .about-window .window-menu .menu-pill.yellow{--marker-color:#ffbd2e}
+        .about-window .window-menu .menu-pill.purple{--marker-color:#c58bff}
+        .about-window .window-menu .menu-pill.pink{--marker-color:#ff4da6}
+        .about-window .window-right-icons{display:flex;align-items:center;gap:12px;color:#fff;margin-left:auto}
+        .about-window .icon{opacity:0.95}
+        .about-window .icon path,.about-window .icon rect,.about-window .icon circle{stroke:currentColor;fill:currentColor}
+        .about-window .batt-level{fill:#fff}
+        .about-window .time{font-family:'Syne Mono', monospace;font-weight:700;font-size:13px;color:rgba(255,255,255,0.95)}
+
+        /* Small-screen adjustments */
+        @media (max-width:720px){
+            .about-window{max-width:92%;margin:20px auto}
+            .about-window .window-menu{gap:10px;font-size:12px}
         }
     </style>
 
@@ -748,6 +906,21 @@
             }
         }catch(e){console.warn('Relocation script error',e)}
     })
+    </script>
+
+    <script>
+    // Update the window bar time display every minute
+    (function(){
+        function refreshTime(){
+            var el = document.getElementById('window-time');
+            if(!el) return;
+            var now = new Date();
+            var opts = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' };
+            el.textContent = now.toLocaleString('en-US', opts);
+        }
+        refreshTime();
+        setInterval(refreshTime, 60000);
+    })();
     </script>
 
     <!-- work Section -->
@@ -843,7 +1016,9 @@
             <h6 class="section-subtitle text-center mb-5 pb-3">Nine stacks — 3 × 3 grid</h6>
 
             <div class="mini-game-wrapper">
-                <div class="player player-top" data-player="0">Player 1
+                <div class="player player-top" data-player="0">
+                    <img class="player-avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Round&facialHairType=Blank&clotheType=ShirtCrewNeck&clotheColor=Blue03&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Smile&skinColor=Light" alt="Player 1">
+                    <div class="player-name">Player 1</div>
                     <div class="lives">
                         <span class="heart">❤</span>
                         <span class="heart">❤</span>
@@ -852,9 +1027,10 @@
                         <span class="heart">❤</span>
                     </div>
                     <div class="hand"></div>
-                    <button id="shuffle-btn" class="shuffle-btn">Shuffle</button>
                 </div>
-                <div class="player player-right" data-player="1">Player 2
+                <div class="player player-right" data-player="1">
+                    <img class="player-avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairTheCaesar&accessoriesType=Prescription02&facialHairType=BeardMagestic&clotheType=Hoodie&clotheColor=PastelBlue&eyeType=Wink&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Brown" alt="Player 2">
+                    <div class="player-name">Player 2</div>
                     <div class="lives">
                         <span class="heart">❤</span>
                         <span class="heart">❤</span>
@@ -865,6 +1041,7 @@
                     <div class="hand"></div>
                 </div>
 
+                <div class="mini-game-diamond">
                 <div class="mini-game-grid">
                     <!-- 9 stacks (3x3) -->
                     <div class="card-stack" data-stack="1" tabindex="0" aria-label="Stack 1">
@@ -882,10 +1059,10 @@
                         <div class="card"><span class="emoji">🛡️</span></div>
                     </div>
                     <div class="card-stack" data-stack="3" tabindex="0" aria-label="Stack 3">
-                        <div class="card"><span class="emoji">🏰</span></div>
-                        <div class="card"><span class="emoji">🏰</span></div>
-                        <div class="card"><span class="emoji">🏰</span></div>
-                        <div class="card"><span class="emoji">🏰</span></div>
+                        <div class="card"><span class="emoji">🏚️</span></div>
+                        <div class="card"><span class="emoji">🏠</span></div>
+                        <div class="card"><span class="emoji">🏛️</span></div>
+                        <div class="card"><span class="emoji">🏯</span></div>
                         <div class="card"><span class="emoji">🏰</span></div>
                     </div>
                     <div class="card-stack" data-stack="4" tabindex="0" aria-label="Stack 4">
@@ -903,11 +1080,11 @@
                         <div class="card"><span class="emoji">🦺</span></div>
                     </div>
                     <div class="card-stack" data-stack="6" tabindex="0" aria-label="Stack 6">
-                        <div class="card"><span class="emoji">🛑</span></div>
-                        <div class="card"><span class="emoji">🛑</span></div>
-                        <div class="card"><span class="emoji">🛑</span></div>
-                        <div class="card"><span class="emoji">🛑</span></div>
-                        <div class="card"><span class="emoji">🛑</span></div>
+                        <div class="card"><span class="emoji">💎</span></div>
+                        <div class="card"><span class="emoji">💎</span></div>
+                        <div class="card"><span class="emoji">💎</span></div>
+                        <div class="card"><span class="emoji">💎</span></div>
+                        <div class="card"><span class="emoji">💎</span></div>
                     </div>
                     <div class="card-stack" data-stack="7" tabindex="0" aria-label="Stack 7">
                         <div class="card"><span class="emoji">🧪</span></div>
@@ -917,11 +1094,11 @@
                         <div class="card"><span class="emoji">🧪</span></div>
                     </div>
                     <div class="card-stack" data-stack="8" tabindex="0" aria-label="Stack 8">
-                        <div class="card"><span class="emoji">🍞</span></div>
-                        <div class="card"><span class="emoji">🍞</span></div>
-                        <div class="card"><span class="emoji">🍞</span></div>
-                        <div class="card"><span class="emoji">🍞</span></div>
-                        <div class="card"><span class="emoji">🍞</span></div>
+                        <div class="card"><span class="emoji">🕳️</span></div>
+                        <div class="card"><span class="emoji">🛑</span></div>
+                        <div class="card"><span class="emoji">🕸️</span></div>
+                        <div class="card"><span class="emoji">⚠️</span></div>
+                        <div class="card"><span class="emoji">🧨</span></div>
                     </div>
                     <div class="card-stack" data-stack="9" tabindex="0" aria-label="Stack 9">
                         <div class="card"><span class="emoji">📦</span></div>
@@ -931,8 +1108,11 @@
                         <div class="card"><span class="emoji">📦</span></div>
                     </div>
                 </div>
+                </div>
 
-                <div class="player player-bottom" data-player="2">Player 3
+                <div class="player player-bottom" data-player="2">
+                    <img class="player-avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairCurly&accessoriesType=Kurt&facialHairType=Blank&clotheType=ShirtScoopNeck&clotheColor=Red&eyeType=Happy&eyebrowType=Default&mouthType=Default&skinColor=Light" alt="Player 3">
+                    <div class="player-name">Player 3</div>
                     <div class="lives">
                         <span class="heart">❤</span>
                         <span class="heart">❤</span>
@@ -942,7 +1122,9 @@
                     </div>
                     <div class="hand"></div>
                 </div>
-                <div class="player player-left" data-player="3">Player 4
+                <div class="player player-left" data-player="3">
+                    <img class="player-avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMessy&accessoriesType=Sunglasses&facialHairType=MoustacheMagnum&clotheType=BlazerShirt&clotheColor=Black&eyeType=Default&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Light" alt="Player 4">
+                    <div class="player-name">Player 4</div>
                     <div class="lives">
                         <span class="heart">❤</span>
                         <span class="heart">❤</span>
@@ -956,38 +1138,100 @@
         </div>
 
         <style>
-            #mini-game,#game{padding-top:100px;padding-bottom:320px}
-            .mini-game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto 120px;padding:60px 0}
-            .card-stack{position:relative;height:220px;cursor:pointer}
-            .card{position:absolute;left:50%;top:50%;width:140px;height:98px;border-radius:10px;background:#ffffff;box-shadow:0 8px 18px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#333;transform:translate(-50%,-50%);transition:transform .18s ease,box-shadow .18s ease,opacity .25s ease}
-            .card-stack .card:nth-child(1){transform:translate(-50%,-60%) rotate(-4deg);z-index:5}
-            .card-stack .card:nth-child(2){transform:translate(-50%,-30%) rotate(-2deg);z-index:4}
-            .card-stack .card:nth-child(3){transform:translate(-50%,-5%) rotate(0deg);z-index:3}
-            .card-stack .card:nth-child(4){transform:translate(-50%,18%) rotate(2deg);z-index:2}
-            .card-stack .card:nth-child(5){transform:translate(-50%,36%) rotate(4deg);z-index:1}
-            .card-stack:focus .card:nth-child(1),.card-stack:hover .card:nth-child(1){transform:translate(-50%,-100%);box-shadow:0 18px 36px rgba(0,0,0,.22)}
+            /* Ensure the custom navbar respects fixed-top and stays above game content */
+            .custom-navbar.fixed-top{position:fixed;top:0;left:0;right:0;z-index:1050}
+            /* keep page content visible below fixed navbar */
+            body{padding-top:80px}
+            #mini-game,#game{padding-top:120px;padding-bottom:520px}
+            .mini-game-diamond{display:flex;justify-content:center;transform:rotate(45deg) translateY(var(--diamond-offset, 0px));transform-origin:center;}
+            .mini-game-diamond .mini-game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:1400px;margin:0 auto 0px;padding:0;place-items:center;align-content:center}
+            .card-stack{position:relative;height:96px;width:96px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+            /* counter-rotate stacks so they appear upright inside rotated grid */
+            .mini-game-diamond .card-stack{transform:rotate(-45deg);}
+
+            /* Card back (default) — use embedded SVG pattern similar to provided image */
+            .card{position:absolute;left:50%;top:50%;width:96px;height:96px;border-radius:10px;border:2px solid rgba(255,255,255,0.22);box-shadow:0 4px 8px rgba(0,0,0,.10);display:flex;align-items:center;justify-content:center;font-weight:700;color:transparent;--card-translate:translate(-50%,-50%);--card-rotate:rotate(45deg);--card-scale:scale(1);transform:var(--card-translate) var(--card-rotate) var(--card-scale);transition:transform .10s ease,box-shadow .10s ease,opacity .12s ease,background .10s ease;background-color:#1aa36a;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><rect width='120' height='120' fill='%231aa36a'/><g fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'><path d='M20 20h80M20 45h80M20 70h80M20 95h80'/></g></svg>");background-size:cover}
+            .card::before{content:'';position:absolute;inset:10px;border-radius:10px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 18%),radial-gradient(circle at 70% 70%, rgba(255,255,255,0.03), transparent 18%);mix-blend-mode:overlay;pointer-events:none}
+            .card .emoji{font-size:34px;visibility:hidden;opacity:0;transform:translateY(6px) rotate(-45deg);transform-origin:center;transition:opacity .16s ease,transform .16s ease}
+
+            /* When revealed show face */
+            .card.revealed{background:#ffffff;color:#333;border-color:#eee}
+            .card.revealed::before{display:none}
+            .card.revealed .emoji{visibility:visible;opacity:1;transform:translateY(0) rotate(-45deg)}
+
+            .card-stack .card:nth-child(1){--card-translate:translate(-50%,-2px);--card-rotate:rotate(calc(45deg - 2deg));z-index:5}
+            .card-stack .card:nth-child(2){--card-translate:translate(-50%,-0px);--card-rotate:rotate(calc(45deg - 0deg));z-index:4}
+            .card-stack .card:nth-child(3){--card-translate:translate(-50%,0px);--card-rotate:rotate(45deg);z-index:3}
+            .card-stack .card:nth-child(4){--card-translate:translate(-50%,0px);--card-rotate:rotate(calc(45deg + 0deg));z-index:2}
+            .card-stack .card:nth-child(5){--card-translate:translate(-50%,2px);--card-rotate:rotate(calc(45deg + 2deg));z-index:1}
+            .card-stack:focus .card:nth-child(1),.card-stack:hover .card:nth-child(1){--card-translate:translate(-50%,-100%);box-shadow:0 18px 36px rgba(0,0,0,.22)}
             .card.removing{pointer-events:none}
             .card i{font-size:28px;color:#333}
-            .card .emoji{font-size:26px}
-            .mini-game-wrapper{position:relative;padding:60px 140px;min-height:640px}
+            .mini-game-wrapper{position:relative;display:flex;align-items:center;justify-content:center;padding:36px 60px;min-height:900px}
+            /* reduce card height visually on hover (scaleY) */
+            .card:hover{--card-scale:scale(1,0.4);box-shadow:0 10px 20px rgba(0,0,0,.16);transform-origin:center}
             .player{position:absolute;padding:8px 12px;background:rgba(255,255,255,0.95);border-radius:8px;border:1px solid #eee;font-weight:600;display:flex;flex-direction:column;align-items:center;min-width:100px}
             .player .hand{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+            .player.pulse{box-shadow:0 8px 20px rgba(66,165,245,.18);transform:translateY(-2px);transition:transform .18s ease}
+            .currency-row{display:flex;gap:8px;justify-content:center;margin-top:6px}
+            .coin-badge,.gem-badge{font-size:12px;padding:4px 8px;border-radius:6px;background:#fff;border:1px solid #eee}
+            /* flying token animation */
+            .fly-token{position:fixed;pointer-events:none;font-size:28px;z-index:9999;transition:transform .62s cubic-bezier(.22,.9,.36,1),opacity .62s ease}
+            .player-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;margin-bottom:6px}
+            .player-name{font-size:14px;margin-bottom:6px;font-weight:600}
             .player .lives{margin-top:8px;display:flex;gap:6px;justify-content:center}
+            .player .actions-badge{margin-top:8px;font-size:12px;padding:4px 8px;border-radius:6px;background:#ffffff;border:1px solid #eee}
+            /* keep player size/design unchanged — only use pointer cursor when selectable */
+            .player.selectable{cursor:pointer}
+
+            /* Sword confirmation prompt shown on blocked stacks */
+            .card-stack{position:relative}
+            .sword-confirm{position:absolute;left:50%;top:6px;transform:translateX(-50%);background:#fff;border:1px solid #e0e0e0;padding:8px 10px;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:40;min-width:160px;text-align:center;font-size:13px}
+            .sword-confirm .msg{margin-bottom:8px}
+            .sword-confirm .controls{display:flex;gap:8px;justify-content:center}
+            .sword-confirm .confirm-btn{background:#d32f2f;color:#fff;border:none;padding:6px 8px;border-radius:6px;cursor:pointer}
+            .sword-confirm .cancel-btn{background:#f3f3f3;border:1px solid #e0e0e0;padding:6px 8px;border-radius:6px;cursor:pointer}
+            .hand-card.attackable{cursor:pointer;border:1px solid #f44336;background:linear-gradient(#fff,#fff);}
+            .hand-card.selected{box-shadow:0 6px 14px rgba(244,67,54,0.18);border-color:#e57373}
+            /* Tooltip shown when hovering a player during attack mode */
+            .player .attack-tooltip{position:absolute;left:50%;top:-28px;transform:translateX(-50%);background:#f44336;color:#fff;padding:6px 10px;border-radius:6px;font-size:12px;box-shadow:0 6px 14px rgba(0,0,0,.12);white-space:nowrap}
+            /* no positioning change; tooltip is absolutely positioned inside the absolutely-positioned player */
+            .player.selectable{cursor:pointer}
+
+            /* damage animations */
+            @keyframes shakeX{0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+            .player.shake{animation:shakeX .42s ease-in-out}
+            .player.blocked{box-shadow:inset 0 0 0 4px rgba(33,150,243,0.08);}
+            .blocked-stack{opacity:1}
+            .blocked-flash{box-shadow:0 6px 18px rgba(0,0,0,.12);border:2px solid rgba(244,67,54,0.12)}
+            @keyframes pop{0%{transform:scale(1);opacity:1}40%{transform:scale(1.6);opacity:1}100%{transform:scale(1);opacity:0.2}}
+            .heart.pop{animation:pop .6s forwards;transform-origin:center}
+            @keyframes heal{0%{transform:scale(1);opacity:0.2}40%{transform:scale(1.6);opacity:1}100%{transform:scale(1);opacity:1}}
+            .heart.heal{animation:heal .7s forwards;transform-origin:center}
             .player .heart{color:#e53935;font-size:16px;line-height:1}
             .player .heart.lost{opacity:0.25;color:#bdbdbd}
             .player .hand-card{background:#f3f3f3;border-radius:6px;padding:4px 6px;font-size:12px;box-shadow:0 4px 8px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center}
             .player .hand-card i{font-size:18px;color:#333}
-            .player-top{left:50%;transform:translateX(-50%);top:12px}
-            .player-bottom{left:50%;transform:translateX(-50%);bottom:12px;top:auto}
-            .player-left{left:12px;top:50%;transform:translateY(-50%)}
-            .player-right{right:12px;top:50%;transform:translateY(-50%)}
+            .player-top{left:50%;transform:translateX(-50%);top:5%;z-index:60}
+            .player-bottom{left:50%;transform:translateX(-50%);bottom:-5%; top:auto;z-index:60}
+            .player-left{left:6%;top:50%;transform:translateY(-50%);z-index:60}
+            .player-right{right:6%;top:50%;transform:translateY(-50%);z-index:60}
             .player.active{outline:3px solid #ffd54f;box-shadow:0 8px 20px rgba(0,0,0,.12)}
             .shuffle-btn{display:inline-block;padding:8px 14px;border-radius:6px;border:none;background:#2b7a78;color:#fff;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(43,122,120,.12)}
             .shuffle-btn:active{transform:translateY(1px)}
             .player-top .shuffle-btn{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);padding:8px 12px}
             @media (max-width:768px){
                 .mini-game-grid{grid-template-columns:repeat(2,1fr)}
-                .card{width:120px;height:86px}
+                .card{width:88px;height:88px}
+                .card-stack{width:100px;height:220px}
+                .player-top{top:8%}
+                .player-bottom{bottom:8%}
+                .player-left{left:4%}
+                .player-right{right:4%}
+            }
+            /* Larger desktop card sizing */
+            @media (min-width:769px){
+                .card-stack .card, .mini-game-grid .card{width:96px;height:96px;aspect-ratio:1/1;min-width:64px}
             }
             @media (max-width:480px){
                 .mini-game-grid{grid-template-columns:repeat(1,1fr)}
@@ -997,45 +1241,273 @@
             (function(){
                 const players = Array.from(document.querySelectorAll('.player'));
                 let currentPlayer = 0;
+                // actionsRemaining[playerIndex] counts how many actions that player has left in their turn
+                const actionsRemaining = new Array(players.length).fill(3);
+                // collectable currency counters
+                const coins = new Array(players.length).fill(0);
+                const gems = new Array(players.length).fill(0);
+
+                // add small actions badge into each player box and a currency row below it
+                players.forEach((p,i)=>{
+                    const badge = document.createElement('div');
+                    badge.className = 'actions-badge';
+                    badge.textContent = 'Actions: ' + actionsRemaining[i];
+                    p.appendChild(badge);
+                    // currency row: coins and gems side-by-side under actions
+                    const currencyRow = document.createElement('div');
+                    currencyRow.className = 'currency-row';
+                    const coinBadge = document.createElement('div');
+                    coinBadge.className = 'coin-badge';
+                    coinBadge.textContent = '💰 ' + coins[i];
+                    const gemBadge = document.createElement('div');
+                    gemBadge.className = 'gem-badge';
+                    gemBadge.textContent = '💎 ' + gems[i];
+                    currencyRow.appendChild(coinBadge);
+                    currencyRow.appendChild(gemBadge);
+                    p.appendChild(currencyRow);
+                });
 
                 function updateActive(){
                     players.forEach((p,i)=> p.classList.toggle('active', i===currentPlayer));
+                    // update badges
+                    players.forEach((p,i)=>{
+                        const b = p.querySelector('.actions-badge');
+                        if(b) b.textContent = 'Actions: ' + actionsRemaining[i];
+                        const cb = p.querySelector('.coin-badge'); if(cb) cb.textContent = '💰 ' + coins[i];
+                        const gb = p.querySelector('.gem-badge'); if(gb) gb.textContent = '💎 ' + gems[i];
+                    });
                 }
 
                 function handCardToPlayer(playerIndex, cardValue){
                     const hand = players[playerIndex].querySelector('.hand');
                     const el = document.createElement('div');
                     el.className = 'hand-card';
+                    let type = '';
                     if(cardValue instanceof Node){
-                        // append cloned icon into the hand-card
                         const icon = cardValue.cloneNode(true);
                         el.appendChild(icon);
+                        type = icon.textContent ? icon.textContent.trim() : '';
                     } else {
                         el.textContent = String(cardValue);
+                        type = String(cardValue).trim();
+                    }
+                    el.dataset.type = type;
+                    el.dataset.owner = String(playerIndex);
+
+                    // if this is a coin or gem, increment counter and do not add to hand
+                    if(type === '💰'){
+                        coins[playerIndex] = (coins[playerIndex] || 0) + 1;
+                        // small visual pulse on player
+                        const pEl = players[playerIndex];
+                        if(pEl){ pEl.classList.add('pulse'); setTimeout(()=> pEl.classList.remove('pulse'), 420); }
+                        updateActive();
+                        return;
+                    }
+                    if(type === '💎'){
+                        gems[playerIndex] = (gems[playerIndex] || 0) + 1;
+                        const pEl = players[playerIndex];
+                        if(pEl){ pEl.classList.add('pulse'); setTimeout(()=> pEl.classList.remove('pulse'), 420); }
+                        updateActive();
+                        return;
+                    }
+
+                    // trap cards: different immediate effects on collect; some deal damage, some only cost an action
+                    // NOTE: gems (💎) are NOT traps anymore — they only increase the gem counter above.
+                    const trapEmojis = ['🕳️','🛑','🕸️','⚠️','🧨'];
+                    if(trapEmojis.includes(type)){
+                        const p = players[playerIndex];
+                        // spider web (🕸️): only cost one extra action (no heart damage)
+                        if(type === '🕸️'){
+                            if(p){ p.classList.add('blocked'); setTimeout(()=> p.classList.remove('blocked'), 420); }
+                            actionsRemaining[playerIndex] = Math.max(0, actionsRemaining[playerIndex] - 1);
+                            if(playerIndex === currentPlayer && actionsRemaining[playerIndex] <= 0){
+                                currentPlayer = (currentPlayer + 1) % players.length;
+                                actionsRemaining[currentPlayer] = 3;
+                            }
+                            updateActive();
+                            return; // dismiss trap card
+                        }
+
+                        // hole (🕳️): both deal 1 damage and cost 1 extra action
+                        if(type === '🕳️'){
+                            if(p){
+                                // animate damage
+                                p.classList.add('shake');
+                                setTimeout(()=> p.classList.remove('shake'), 420);
+                                const hearts = Array.from(p.querySelectorAll('.heart'));
+                                const targetHeart = hearts.find(h => !h.classList.contains('lost')) || hearts[0];
+                                if(targetHeart){
+                                    targetHeart.classList.add('pop');
+                                    setTimeout(()=>{ targetHeart.classList.remove('pop'); targetHeart.classList.add('lost'); }, 600);
+                                }
+                            }
+                            // also deduct one extra action from the collector
+                            actionsRemaining[playerIndex] = Math.max(0, actionsRemaining[playerIndex] - 1);
+                            if(playerIndex === currentPlayer && actionsRemaining[playerIndex] <= 0){
+                                currentPlayer = (currentPlayer + 1) % players.length;
+                                actionsRemaining[currentPlayer] = 3;
+                            }
+                            updateActive();
+                            return; // dismiss trap card
+                        }
+
+                        // other traps (mouse trap, hazard, explosives): apply 1 damage
+                        if(p){
+                            p.classList.add('shake');
+                            setTimeout(()=> p.classList.remove('shake'), 420);
+                            const hearts = Array.from(p.querySelectorAll('.heart'));
+                            const targetHeart = hearts.find(h => !h.classList.contains('lost')) || hearts[0];
+                            if(targetHeart){
+                                targetHeart.classList.add('pop');
+                                setTimeout(()=>{ targetHeart.classList.remove('pop'); targetHeart.classList.add('lost'); }, 600);
+                            }
+                        }
+                        return;
+                    }
+                    // if it's a sword, make it attackable
+                    if(type === '⚔️'){
+                        el.classList.add('attackable');
+                        el.addEventListener('click', (e)=>{
+                            e.stopPropagation();
+                            // only allow owner to activate/deactivate
+                            if(Number(el.dataset.owner) !== currentPlayer) return;
+                            // toggle attack mode for this card
+                            if(selectedHandCard === el){
+                                exitAttackMode();
+                            } else {
+                                // if another card was selected, clear it first
+                                if(selectedHandCard) exitAttackMode();
+                                enterAttackMode(el);
+                            }
+                        });
+                    }
+                    if(type === '🧪'){
+                        // potion: clicking restores 1 heart to owner (only owner can use)
+                        el.classList.add('potion');
+                        el.addEventListener('click', (e)=>{
+                            e.stopPropagation();
+                            const ownerIdx = Number(el.dataset.owner);
+                            if(ownerIdx !== currentPlayer) return;
+                            // find last lost heart (rightmost)
+                            const hearts = Array.from(players[ownerIdx].querySelectorAll('.heart'));
+                            let lastLost = -1;
+                            for(let i=0;i<hearts.length;i++){ if(hearts[i].classList.contains('lost')) lastLost = i; }
+                            if(lastLost < 0) return; // nothing to heal
+                            // restore the heart and play heal animation
+                            const targetHeart = hearts[lastLost];
+                            targetHeart.classList.remove('lost');
+                            targetHeart.classList.add('heal');
+                            setTimeout(()=> targetHeart.classList.remove('heal'), 700);
+                            // consume the potion card
+                            if(el && el.parentNode) el.remove();
+                            // consume action for owner
+                            actionsRemaining[ownerIdx] = Math.max(0, actionsRemaining[ownerIdx] - 1);
+                            if(ownerIdx === currentPlayer && actionsRemaining[ownerIdx] <= 0){
+                                currentPlayer = (currentPlayer + 1) % players.length;
+                                actionsRemaining[currentPlayer] = 3;
+                            }
+                            updateActive();
+                        });
                     }
                     hand.appendChild(el);
                 }
 
-                function popTop(stack){
-                    const top = stack.querySelector('.card');
+                function popTop(stack, topEl){
+                    const top = topEl || stack.querySelector('.card');
                     if(!top) return;
+                    // clear any pending reveal timer just in case
+                    if(top.dataset.revealTimer){
+                        clearTimeout(Number(top.dataset.revealTimer));
+                        delete top.dataset.revealTimer;
+                    }
                     const iconNode = top.querySelector('i, .emoji');
-                    const value = iconNode || top.textContent.trim();
+                    const iconText = iconNode ? iconNode.textContent.trim() : top.textContent.trim();
+                    const value = iconNode || iconText;
+                    // if it's a coin or gem, play flying token animation toward player's badge
+                    if(iconText === '💰' || iconText === '💎'){
+                        const targetBadge = players[currentPlayer].querySelector(iconText === '💰' ? '.coin-badge' : '.gem-badge');
+                        if(targetBadge){ flyToken(iconText, top, targetBadge); }
+                    }
                     top.classList.add('removing');
-                    top.style.transform = 'translate(-50%,-140%) scale(.98)';
+                    top.style.setProperty('--card-translate','translate(-50%,-140%)');
+                    top.style.setProperty('--card-scale','scale(.98)');
                     top.style.opacity = '0';
                     top.addEventListener('transitionend', function(){ top.remove(); }, {once:true});
                     handCardToPlayer(currentPlayer, value);
-                    // advance turn
-                    currentPlayer = (currentPlayer + 1) % players.length;
+                    // consume an action for current player
+                    actionsRemaining[currentPlayer] = Math.max(0, actionsRemaining[currentPlayer] - 1);
+                    // if player used all actions, advance to next player and reset their actions
+                    if(actionsRemaining[currentPlayer] <= 0){
+                        currentPlayer = (currentPlayer + 1) % players.length;
+                        actionsRemaining[currentPlayer] = 3;
+                    }
                     updateActive();
+                }
+
+                const castleEmojis = ['🏚️','🏠','🏛️','🏯','🏰'];
+                function isCastleEmoji(txt){
+                    if(!txt) return false;
+                    const t = txt.trim();
+                    return castleEmojis.includes(t);
+                }
+
+                function handleStackClick(stack){
+                    const top = stack.querySelector('.card');
+                    if(!top) return;
+                    // ignore clicks while card is being removed
+                    if(top.classList.contains('removing')) return;
+                    // determine if top is a castle
+                    const iconNode = top.querySelector('.emoji');
+                    const iconText = iconNode ? iconNode.textContent : '';
+                    const topIsCastle = isCastleEmoji(iconText);
+
+                    // if stack already blocked (by a revealed castle), do nothing
+                    if(stack.dataset.blocked === 'true'){
+                        // if the block is from a castle or stop-sign, allow current player to spend a sword to remove it
+                        const topIconNode = top.querySelector('.emoji');
+                        const topIconText = topIconNode ? topIconNode.textContent.trim() : '';
+                        // blocked stacks are caused by revealed castle cards or stop-sign traps (🛑)
+                        const blockingIsCastle = topIsCastle || topIconText === '🛑';
+                        if(blockingIsCastle){
+                            const sword = findSwordCard(currentPlayer);
+                            if(sword){
+                                // show confirmation UI before consuming the sword
+                                promptConsumeSword(stack, top, sword);
+                                return;
+                            }
+                        }
+                        // default: flash to indicate blocked
+                        stack.classList.add('blocked-flash');
+                        setTimeout(()=> stack.classList.remove('blocked-flash'), 260);
+                        return;
+                    }
+
+                    // if not yet revealed, reveal on click
+                    if(!top.classList.contains('revealed')){
+                        top.classList.add('revealed');
+                        // if it's a castle, block the stack so next cards cannot be revealed
+                        if(topIsCastle){ stack.dataset.blocked = 'true'; stack.classList.add('blocked-stack'); }
+                        // if it's a stop-sign trap, also block the stack on reveal
+                        if(iconText && iconText.trim() === '🛑'){ stack.dataset.blocked = 'true'; stack.classList.add('blocked-stack'); }
+                        return;
+                    }
+
+                    // already revealed -> if it's a castle, cannot collect; block remains
+                    if(topIsCastle){
+                        stack.classList.add('blocked-flash');
+                        setTimeout(()=> stack.classList.remove('blocked-flash'), 260);
+                        return;
+                    }
+
+                    // otherwise collect as normal
+                    popTop(stack, top);
                 }
 
                 // attach handlers
                 document.querySelectorAll('.card-stack').forEach(stack => {
-                    stack.addEventListener('click', () => popTop(stack));
+                    stack.addEventListener('click', () => handleStackClick(stack));
                     stack.addEventListener('keydown', (e) => {
-                        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); popTop(stack); }
+                        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleStackClick(stack); }
                     });
                 });
 
@@ -1052,38 +1524,257 @@
                 window.game.resetLives = function(){
                     players.forEach(p=> p.querySelectorAll('.heart').forEach(h=> h.classList.remove('lost')));
                 };
+                // Unblock a stack programmatically: removes the blocking top card (castle or 🛑) and clears the block
+                window.game.unblockStack = function(stackIndex){
+                    const stacks = Array.from(document.querySelectorAll('.card-stack'));
+                    let stack = null;
+                    if(typeof stackIndex === 'number'){
+                        stack = stacks.find(s => Number(s.dataset.stack) === stackIndex) || stacks[stackIndex];
+                    } else if(typeof stackIndex === 'string'){
+                        stack = document.querySelector(`[data-stack="${stackIndex}"]`);
+                    }
+                    if(!stack) return false;
+                    const top = stack.querySelector('.card');
+                    if(top){
+                        const iconNode = top.querySelector('.emoji');
+                        const txt = iconNode ? iconNode.textContent.trim() : '';
+                        if(isCastleEmoji(txt) || txt === '🛑'){
+                            top.remove();
+                        }
+                    }
+                    delete stack.dataset.blocked;
+                    stack.classList.remove('blocked-stack');
+                    return true;
+                };
+
+                // Attack mode state
+                let selectedHandCard = null;
+
+                function enterAttackMode(cardEl){
+                    // set selected
+                    selectedHandCard = cardEl;
+                    cardEl.classList.add('selected');
+                    const owner = Number(cardEl.dataset.owner);
+                    // highlight targetable players (not self) and show tooltip immediately
+                    players.forEach((p,i)=>{
+                        if(i === owner) return;
+                        p.classList.add('selectable');
+                        // add immediate tooltip element
+                        if(!p.querySelector('.attack-tooltip')){
+                            const tip = document.createElement('div');
+                            tip.className = 'attack-tooltip';
+                            tip.textContent = 'Select to attack';
+                            p.appendChild(tip);
+                        }
+                    });
+                }
+
+                function exitAttackMode(){
+                    if(!selectedHandCard) return;
+                    selectedHandCard.classList.remove('selected');
+                    selectedHandCard = null;
+                    players.forEach(p=>{
+                        p.classList.remove('selectable');
+                        if(p._attackMouseEnter) p.removeEventListener('mouseenter', p._attackMouseEnter);
+                        if(p._attackMouseLeave) p.removeEventListener('mouseleave', p._attackMouseLeave);
+                        const t = p.querySelector('.attack-tooltip'); if(t) t.remove();
+                        delete p._attackMouseEnter; delete p._attackMouseLeave;
+                    });
+                }
+
+                function findDefenceCard(playerIndex){
+                    const hand = players[playerIndex].querySelector('.hand');
+                    if(!hand) return null;
+                    // prefer shield (🛡️) then armor (🦺)
+                    const cards = Array.from(hand.querySelectorAll('.hand-card'));
+                    for(const c of cards){ if(c.dataset.type === '🛡️') return c; }
+                    for(const c of cards){ if(c.dataset.type === '🦺') return c; }
+                    return null;
+                }
+
+                function findSwordCard(playerIndex){
+                    const hand = players[playerIndex].querySelector('.hand');
+                    if(!hand) return null;
+                    const cards = Array.from(hand.querySelectorAll('.hand-card'));
+                    for(const c of cards){ if(c.dataset.type === '⚔️') return c; }
+                    return null;
+                }
+
+                function flyToken(emoji, fromEl, toEl){
+                    try{
+                        const fromRect = fromEl.getBoundingClientRect();
+                        const toRect = toEl.getBoundingClientRect();
+                        const token = document.createElement('div');
+                        token.className = 'fly-token';
+                        token.textContent = emoji;
+                        document.body.appendChild(token);
+                        // start position centered on fromEl
+                        const startX = fromRect.left + fromRect.width/2;
+                        const startY = fromRect.top + fromRect.height/2;
+                        token.style.left = (startX - 20) + 'px';
+                        token.style.top = (startY - 20) + 'px';
+                        token.style.opacity = '1';
+                        // force layout
+                        token.getBoundingClientRect();
+                        // compute target center and translation
+                        const endX = toRect.left + toRect.width/2;
+                        const endY = toRect.top + toRect.height/2;
+                        const dx = endX - startX;
+                        const dy = endY - startY;
+                        // apply transform
+                        token.style.transform = `translate(${dx}px, ${dy}px) scale(.5)`;
+                        token.style.opacity = '0.0';
+                        // cleanup after transition
+                        setTimeout(()=>{ if(token && token.parentNode) token.parentNode.removeChild(token); }, 700);
+                    }catch(e){ /* ignore animation errors */ }
+                }
+
+                // show an in-place confirmation to spend a sword to unblock a stack
+                function promptConsumeSword(stack, top, sword){
+                    // avoid duplicate prompts
+                    if(stack._swordPrompt) return;
+                    const box = document.createElement('div');
+                    box.className = 'sword-confirm';
+                    box.innerHTML = "<div class='msg'>Spend <span class='emoji'>⚔️</span> to remove blocker?</div>" +
+                                    "<div class='controls'><button class='confirm-btn'>Use Sword</button><button class='cancel-btn'>Cancel</button></div>";
+                    stack.appendChild(box);
+                    stack._swordPrompt = box;
+
+                    const confirm = box.querySelector('.confirm-btn');
+                    const cancel = box.querySelector('.cancel-btn');
+
+                    function cleanup(){ if(box && box.parentNode) box.parentNode.removeChild(box); delete stack._swordPrompt; }
+
+                    confirm.addEventListener('click', ()=>{
+                        // perform unblock: remove sword, remove top (castle/stop-sign), clear block, consume action
+                        if(sword && sword.parentNode) sword.remove();
+                        if(top && top.parentNode) top.remove();
+                        delete stack.dataset.blocked;
+                        stack.classList.remove('blocked-stack');
+                        actionsRemaining[currentPlayer] = Math.max(0, actionsRemaining[currentPlayer] - 1);
+                        if(actionsRemaining[currentPlayer] <= 0){
+                            currentPlayer = (currentPlayer + 1) % players.length;
+                            actionsRemaining[currentPlayer] = 3;
+                        }
+                        updateActive();
+                        cleanup();
+                    });
+
+                    cancel.addEventListener('click', ()=>{
+                        // just remove prompt and flash blocked
+                        cleanup();
+                        stack.classList.add('blocked-flash');
+                        setTimeout(()=> stack.classList.remove('blocked-flash'), 260);
+                    });
+                }
+
+                function performAttack(targetIndex){
+                    if(!selectedHandCard) return;
+                    const owner = Number(selectedHandCard.dataset.owner);
+                    if(owner === targetIndex) return; // no self-attack
+                    const target = players[targetIndex];
+
+                    // check for defensive card on target's hand
+                    const defenceCard = findDefenceCard(targetIndex);
+                    if(defenceCard){
+                        // auto-block: consume defence card immediately and prevent damage
+                        // small visual: flash blocked state
+                        target.classList.add('blocked');
+                        setTimeout(()=> target.classList.remove('blocked'), 420);
+                        // consume defence card
+                        defenceCard.remove();
+                        // remove attacker's card (attacker still spends the sword) and consume action
+                        if(selectedHandCard && selectedHandCard.parentNode) selectedHandCard.remove();
+                        actionsRemaining[owner] = Math.max(0, actionsRemaining[owner] - 1);
+                        if(owner === currentPlayer && actionsRemaining[owner] <= 0){
+                            currentPlayer = (currentPlayer + 1) % players.length;
+                            actionsRemaining[currentPlayer] = 3;
+                        }
+                        updateActive();
+                        exitAttackMode();
+                    } else {
+                        // no defence card -> apply damage immediately
+                        applyDamageTo(targetIndex, owner);
+                    }
+                }
+
+                function applyDamageTo(targetIndex, owner){
+                    const target = players[targetIndex];
+                    // animate target shake and pop a heart
+                    target.classList.add('shake');
+                    // find first non-lost heart to pop
+                    const hearts = Array.from(target.querySelectorAll('.heart'));
+                    const targetHeart = hearts.find(h => !h.classList.contains('lost')) || hearts[0];
+                    if(targetHeart){
+                        targetHeart.classList.add('pop');
+                        // after pop completes, mark as lost
+                        setTimeout(()=>{
+                            targetHeart.classList.remove('pop');
+                            targetHeart.classList.add('lost');
+                        }, 600);
+                    }
+                    // remove shake after animation
+                    setTimeout(()=> target.classList.remove('shake'), 420);
+
+                    // after the visual animation, remove card and consume action
+                    setTimeout(()=>{
+                        // remove the used card from owner's hand
+                        if(selectedHandCard && selectedHandCard.parentNode) selectedHandCard.remove();
+                        // consume action for owner
+                        actionsRemaining[owner] = Math.max(0, actionsRemaining[owner] - 1);
+                        // if the attacker used all actions and was the current player, advance turn
+                        if(owner === currentPlayer && actionsRemaining[owner] <= 0){
+                            currentPlayer = (currentPlayer + 1) % players.length;
+                            actionsRemaining[currentPlayer] = 3;
+                        }
+                        updateActive();
+                        exitAttackMode();
+                    }, 480);
+                }
+
+                // allow clicking on players to be targets when attack mode active
+                players.forEach((p,i)=>{
+                    p.addEventListener('click', (e)=>{
+                        if(!selectedHandCard) return;
+                        performAttack(i);
+                    });
+                });
 
                 // shuffle handler
-                const shuffleBtn = document.getElementById('shuffle-btn');
-                if(shuffleBtn){
-                    shuffleBtn.addEventListener('click', () => {
-                        // prepare pool: 9 icons x 5 = 45 cards
-                        const icons = ['⚔️','🛡️','🏰','💰','🦺','🛑','🧪','🍞','📦'];
-                        let pool = [];
-                        icons.forEach(ic => { for(let i=0;i<5;i++) pool.push(ic); });
-                        // Fisher-Yates shuffle
-                        for(let i=pool.length-1;i>0;i--){
-                            const j = Math.floor(Math.random()*(i+1));
-                            [pool[i],pool[j]] = [pool[j],pool[i]];
-                        }
-                        // distribute 5 per stack
-                        const stacks = Array.from(document.querySelectorAll('.card-stack'));
-                        stacks.forEach((stack, idx) => {
-                            // clear existing cards
-                            stack.innerHTML = '';
-                            for(let k=0;k<5;k++){
-                                const v = pool[idx*5 + k];
+                function shuffleStacks(){
+                    // prepare pool: 9 icons x 5 = 45 cards
+                    // icons: include five castle variants (weak -> strong) replacing single '🏰'
+                    const icons = ['⚔️','🛡️','🏚️','🏠','🏛️','🏯','🏰','💰','🦺','💎','🧪','🕳️','💎','🕸️','⚠️','🧨','📦'];
+                    let pool = [];
+                    icons.forEach(ic => { for(let i=0;i<5;i++) pool.push(ic); });
+                    // Fisher-Yates shuffle
+                    for(let i=pool.length-1;i>0;i--){
+                        const j = Math.floor(Math.random()*(i+1));
+                        [pool[i],pool[j]] = [pool[j],pool[i]];
+                    }
+                    // distribute 5 per stack
+                    const stacks = Array.from(document.querySelectorAll('.card-stack'));
+                    stacks.forEach((stack, idx) => {
+                        // clear existing cards
+                        stack.innerHTML = '';
+                        for(let k=0;k<5;k++){
+                                let v = pool[idx*5 + k];
+                                // ensure gems do not appear in trap stacks 6 or 8; replace with stop-sign
+                                if((String(stack.dataset.stack) === '8' || String(stack.dataset.stack) === '6') && v === '💎') v = '🛑';
                                 const d = document.createElement('div');
                                 d.className = 'card';
                                 const span = document.createElement('span');
                                 span.className = 'emoji';
                                 span.textContent = v;
                                 d.appendChild(span);
+                                // set data-type for easier logic
+                                d.dataset.type = v;
                                 stack.appendChild(d);
                             }
-                        });
                     });
                 }
+                // shuffle at game start automatically
+                shuffleStacks();
 
                 // initial state
                 updateActive();
