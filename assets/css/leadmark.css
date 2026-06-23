@@ -155,7 +155,11 @@ sup {
 }
 
 sub {
-  bottom: -.25em;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:10px 26px;font-weight:800;text-decoration:none;border-radius:999px;
+    color:#111;background:linear-gradient(90deg,#ff9a3c 0%,#ff6bbd 100%);
+    border:1px solid rgba(0,0,0,0.06);box-shadow:0 8px 20px rgba(255,107,189,0.08), inset 0 -2px 0 rgba(0,0,0,0.04);
+    transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease;backface-visibility:hidden;
 }
 
 sup {
@@ -398,35 +402,9 @@ h5, .h5 {
 h6, .h6 {
   font-size: 1rem;
 }
-
-.lead {
-  font-size: 1.25rem;
-  font-weight: 300;
-}
-
-.display-1 {
-  font-size: 6rem;
-  font-weight: 300;
+/*
   line-height: 1.2;
-}
-
-.display-2 {
-  font-size: 5.5rem;
-  font-weight: 300;
-  line-height: 1.2;
-}
-
-.display-3 {
-  font-size: 4.5rem;
-  font-weight: 300;
-  line-height: 1.2;
-}
-
-.display-4 {
-  font-size: 3.5rem;
-  font-weight: 300;
-  line-height: 1.2;
-}
+}*/
 
 hr {
   margin-top: 1rem;
@@ -5264,6 +5242,25 @@ about
   font-size: 0.4em;
 }
 
+/* Dot-grid background utility for sections like About (global) */
+.dot-grid{
+  background-color: #ffffff;
+  /* use an inline SVG pattern for a small cross (+) mark centered in each tile */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' fill='%23ffffff'/%3E%3Cg stroke='rgba(0,0,0,0.12)' stroke-width='1' stroke-linecap='round'%3E%3Cline x1='14' y1='12' x2='14' y2='16'/%3E%3Cline x1='12' y1='14' x2='16' y2='14'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 28px 28px;
+  /* align grid so cross centers match SVG pattern */
+  background-position: 0 -28px;
+}
+
+/* More specific target to override other rules if needed */
+#about.dot-grid{
+  background-color: #ffffff !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' fill='%23ffffff'/%3E%3Cg stroke='rgba(0,0,0,0.12)' stroke-width='1' stroke-linecap='round'%3E%3Cline x1='14' y1='12' x2='14' y2='16'/%3E%3Cline x1='12' y1='14' x2='16' y2='14'/%3E%3C/g%3E%3C/svg%3E") !important;
+  background-size: 28px 28px !important;
+  background-repeat: repeat !important;
+  background-position: 0 -28px !important;
+}
+
 @keyframes typing {
   0%{
       width: 0%;
@@ -5292,6 +5289,8 @@ about
   .typing-demo{
     font-size: 1em;
   }
+
+  
 }
 
 @media (max-width: 500.98px) {
@@ -12678,6 +12677,50 @@ textarea.form-control {
   overflow: hidden;
 }
 
+/* Custom art-style cursor: white ring with dark center (data-uri SVG) */
+html, body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23bdbdbd' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23000000'/%3E%3C/svg%3E") 16 16, auto;
+}
+
+/* Ensure interactive elements still show pointer on hover */
+a, button, input[type="submit"], .btn, .btn-talk { cursor: pointer; }
+
+/* Custom JS-driven art-style cursor */
+.use-art-cursor * { cursor: none !important; }
+.art-cursor{
+  position: fixed;
+  left: 0; top: 0;
+  width: 36px; height: 36px; border-radius: 50%;
+  pointer-events: none; z-index: 99999; transform: translate(-50%, -50%);
+  display: flex; align-items:center; justify-content:center;
+  transition: transform 120ms ease, opacity 180ms ease, background-color 120ms ease;
+  background: transparent; border: 2px solid rgba(0,0,0,0.12);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08) inset, 0 6px 18px rgba(0,0,0,0.06);
+}
+.art-cursor .inner{ width:8px; height:8px; border-radius:50%; background:#111; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
+.art-cursor.hover { transform: translate(-50%,-50%) scale(1.18); }
+
+/* Label shown inside ring when hovering elements with data-cursor-label */
+.art-cursor .label{
+  position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%) translateZ(0);
+  color: #111; font-weight:800; font-size:13px; letter-spacing:0.6px; text-transform:none;
+  pointer-events:none; opacity:0; transition: opacity 160ms cubic-bezier(.2,.9,.25,1), transform 160ms cubic-bezier(.2,.9,.25,1);
+  white-space:nowrap; font-family: 'Poppins', system-ui, sans-serif;
+  padding:8px 14px; border-radius:999px; min-height:34px; display:inline-flex; align-items:center; gap:8px;
+  background: linear-gradient(180deg, #ffffff, #f5f7fb 40%, #e6eefc 100%);
+  box-shadow: 0 18px 40px rgba(16,24,40,0.12), 0 6px 12px rgba(16,24,40,0.08);
+  border: 1px solid rgba(255,255,255,0.6);
+  transform-origin: left center; will-change:transform,opacity;
+}
+.art-cursor .label::before{
+  content:''; position:absolute; left:8px; top:6px; right:auto; bottom:auto; width:40%; height:6px; border-radius:999px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,255,255,0.08)); opacity:0.9; transform:translateZ(6px);
+}
+.art-cursor.has-label .label{ opacity:1; transform: translateY(-50%) translateZ(6px) rotateX(0deg) rotateY(0deg); }
+.art-cursor .label.flip{ left: auto; right: calc(100% + 12px); transform-origin: right center; }
+.art-cursor.has-label .inner{ opacity:0; }
+
+
 .wrapper div {
   height: 60px;
   width: 60px;
@@ -13009,6 +13052,29 @@ animated background
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   z-index: 1;
+}
+
+/* Footer: make contact section fill the full width with a solid green background
+   Override the dark overlay for the contact footer so the green shows through. */
+footer {
+  background-color: #163e34; /* dark green - change if you prefer another tone */
+  color: #fff;
+  padding: 0;
+}
+
+footer .section.has-img-bg {
+  background-color: transparent; /* use footer's bg so it spans full width */
+  position: relative;
+}
+
+/* remove the heavy overlay for the footer contact section so the green is visible */
+footer .section.has-img-bg:after {
+  background: transparent !important;
+}
+
+/* ensure inner container doesn't show its own background and text remains readable */
+footer .container {
+  background: transparent;
 }
 
 .portfolio-section .filters {
@@ -13474,7 +13540,6 @@ main {
 	max-width: var(--max);
 	width: 100%;
 	margin: 0 auto;
-	padding: 80px 40px 60px;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -13685,7 +13750,6 @@ h1 em {
 }
 
 footer {
-	max-width: var(--max);
 	width: 100%;
 	margin: 0 auto;
 	padding: 24px 40px;
@@ -13956,5 +14020,69 @@ footer {
   .code-block .num { color: var(--orange); }
   .code-block .cm { color: var(--surface25); }
   .code-block .fn { color: var(--lilac); }
+
+/*-----------------------title-------------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+IS:wght@100..400&display=swap');
+
+
+.title-about {
+  overflow: hidden;
+  padding: 36px 12px;
+
+  span {
+    position: relative;
+    font-family: "Playwrite IS", cursive;
+    font-size: 1.4em;
+
+    &:before {
+      display: none !important;
+    }
+
+  }
+}
+
+@property --mask-progress {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 12%;
+}
+
+/* dot-grid rules are scoped further below to avoid covering the viewport */
+/*-----------------------dot grid window (scoped to project window)-------------------------*/
+/* Place the griddot canvas inside the project window instead of full-viewport */
+.about-window .container-proj01 #wrap-griddot,
+.about-window.proj-window #wrap-griddot {
+  position: absolute;
+  inset: 0; /* fill the project window body */
+  background: transparent; /* avoid full-screen blackout */
+  filter: none;
+  pointer-events: auto; /* allow canvas interactions inside the window only */
+  z-index: 8;
+}
+
+.about-window .container-proj01{ position: relative; width:100%; height:auto; min-height:360px; }
+
+#wrap-griddot {
+  /* fallback: keep non-fixed but invisible unless scoped above matches */
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  filter: none;
+  pointer-events: none;
+}
+
+#cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  display: block;
+  pointer-events: auto;
+}
+
 
   
