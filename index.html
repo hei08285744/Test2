@@ -46,6 +46,10 @@
     <!-- Isotope -->
     <script src="assets/vendors/isotope/isotope.pkgd.js"></script>
 
+    <!-- GSAP (used for magnetic button motion) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
+
     <!-- LeadMark js -->
     <script src="assets/js/leadmark.js"></script>
 
@@ -161,7 +165,14 @@
         .nav-right{display:flex;align-items:center;gap:12px}
         .nav-right .small-note{color:#333;font-weight:600}
         .nav-right .heart{color:#e53935;margin-left:6px}
-        .btn-talk{background:#0a0a0a;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:800}
+        .btn-talk{
+            display:inline-flex;align-items:center;justify-content:center;gap:8px;
+            padding:10px 26px;font-weight:800;text-decoration:none;border-radius:999px;
+            color:#111;background:linear-gradient(90deg,#ff9a3c 0%,#ff6bbd 100%);
+            border:1px solid rgba(0,0,0,0.06);box-shadow:0 8px 20px rgba(255,107,189,0.08), inset 0 -2px 0 rgba(0,0,0,0.04);
+            transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease;backface-visibility:hidden;
+        }
+        .btn-talk:hover{ transform: translateY(-3px); box-shadow:0 18px 40px rgba(255,107,189,0.12); }
         @media (max-width:768px){
             .center-menu{display:none}
             .center-menu.open{display:flex;position:absolute;left:50%;top:64px;transform:translateX(-50%);flex-direction:column;padding:12px;background:#fff;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.12);gap:8px;z-index:999}
@@ -306,6 +317,141 @@
         setTimeout(placeCallout,60);
     })();
     </script>
+    <script>
+    // Make windows with class .about-window draggable by their top bar on desktop
+    document.addEventListener('DOMContentLoaded', function(){
+        const container = document.querySelector('#about');
+        if(!container) return;
+
+        const windows = Array.from(container.querySelectorAll('.about-window'));
+        if(!windows.length) return;
+
+        // disable on small screens
+        if(window.matchMedia('(max-width:900px)').matches){
+            windows.forEach(w => { w.style.position='static'; });
+            return;
+        }
+
+        // Per-window independent drag handlers. proj-window uses the body as the drag handle
+        windows.forEach(win => {
+            if(!win.classList.contains('proj-window')){
+                try{ win.style.setProperty('width','20vw','important'); win.style.setProperty('max-width','500px','important'); win.style.setProperty('min-width','320px','important'); }catch(e){ win.style.width='20vw'; win.style.maxWidth='500px'; win.style.minWidth='320px'; }
+            }
+            win.style.position = 'absolute';
+            win.style.zIndex = win.classList.contains('proj-window') ? '14' : '12';
+
+            const topBar = win.querySelector('.window-top') || win;
+            const bodyHandle = win.querySelector('.window-body') || win;
+            topBar.style.touchAction = 'none'; topBar.style.cursor = 'grab';
+            bodyHandle.style.touchAction = 'none'; bodyHandle.style.cursor = win.classList.contains('proj-window') ? 'grab' : bodyHandle.style.cursor;
+
+            // choose handle and sensitivity
+            // Use the top bar as the drag handle for both windows (proj restored to top bar)
+            const handle = topBar;
+            const sensitivity = win.classList.contains('proj-window') ? 0.7 : 1.0; // proj window moves slightly slower
+
+            handle.addEventListener('pointerdown', function(e){
+                if(window.matchMedia('(max-width:900px)').matches) return;
+                e.preventDefault(); e.stopPropagation();
+                const rect = win.getBoundingClientRect();
+                const contRect = container.getBoundingClientRect();
+                const startX = e.clientX, startY = e.clientY;
+                const startLeft = rect.left - contRect.left;
+                const startTop = rect.top - contRect.top;
+
+                // bring this window to front
+                try{
+                    const allWins = Array.from(container.querySelectorAll('.about-window'));
+                    let highest = 0;
+                    allWins.forEach(w => { const z = parseInt(window.getComputedStyle(w).zIndex,10); if(!isNaN(z)) highest = Math.max(highest, z); });
+                    win.style.zIndex = (highest + 1).toString();
+                }catch(err){}
+
+                try{ handle.setPointerCapture(e.pointerId); }catch(err){}
+                // mark global drag active so other pointermove handlers can opt-out
+                try{ window.__dragActive = true; }catch(_){ }
+                handle.style.cursor = 'grabbing';
+                win.style.transform = 'none';
+
+                // disable pointer events on other windows while dragging to avoid accidental moves
+                const otherWins = Array.from(container.querySelectorAll('.about-window')).filter(w=>w!==win);
+                otherWins.forEach(w=> w.style.pointerEvents = 'none');
+                // debugging info
+                console.debug('drag:start', { which: win.className, pointerId: e.pointerId, startLeft, startTop });
+
+                // create a unique drag id for this window and mark global drag state
+                const dragId = 'drag-' + Math.random().toString(36).slice(2,9);
+                try{ win.dataset.dragId = dragId; window.__dragActive = true; window.__dragActiveId = dragId; }catch(_){ }
+
+                function onMove(ev){
+                    // only respond to the active pointer and active drag id
+                    if(ev.pointerId !== e.pointerId) return;
+                    if(window.__dragActiveId !== dragId) return;
+                    const cRect = container.getBoundingClientRect();
+                    const nx = Math.max(8, Math.min(startLeft + (ev.clientX - startX) * sensitivity, cRect.width - win.offsetWidth - 8));
+                    const ny = Math.max(8, Math.min(startTop + (ev.clientY - startY) * sensitivity, cRect.height - win.offsetHeight - 8));
+                    // apply only to this window
+                    win.style.left = nx + 'px';
+                    win.style.top = ny + 'px';
+                    console.debug('drag:move', { which: win.className, dragId: dragId, pointerId: ev.pointerId, left: nx, top: ny });
+                }
+
+                function onUp(ev){
+                    if(ev.pointerId !== e.pointerId) return;
+                    try{ handle.releasePointerCapture(ev.pointerId); }catch(err){}
+                    handle.style.cursor = 'grab';
+                    // restore pointer events on other windows
+                    otherWins.forEach(w=> w.style.pointerEvents = 'auto');
+                    // clear global drag active flag
+                    try{ window.__dragActive = false; window.__dragActiveId = null; }catch(_){ }
+                    console.debug('drag:end', { which: win.className, dragId: dragId, pointerId: ev.pointerId });
+                    // remove document-level listeners
+                    try{ document.removeEventListener('pointermove', onMove); }catch(e){}
+                    try{ document.removeEventListener('pointerup', onUp); }catch(e){}
+                    try{ document.removeEventListener('pointercancel', onUp); }catch(e){}
+                }
+
+                // attach listeners to document so only one active drag handler runs at a time
+                document.addEventListener('pointermove', onMove);
+                document.addEventListener('pointerup', onUp, { once: false });
+                document.addEventListener('pointercancel', onUp, { once: false });
+            });
+        });
+
+        // place about window at left and proj-window aligned to right edge inside container
+        function positionWindows(){
+            const aboutWin = container.querySelector('.about-window:not(.proj-window)');
+            const projWin = container.querySelector('.about-window.proj-window');
+            const pad = 64; // left margin for about window
+            const projGap = 120; // gap from right edge for proj window
+            if(aboutWin){ aboutWin.style.left = pad + 'px'; aboutWin.style.top = '64px'; }
+            if(projWin){
+                const contW = container.clientWidth || container.getBoundingClientRect().width;
+                const pw = projWin.offsetWidth || 380;
+                let left = Math.max(pad, Math.round(contW - pw - projGap));
+                projWin.style.left = left + 'px';
+                projWin.style.top = '120px';
+            }
+        }
+
+        // initial placement and responsive update
+        window.addEventListener('load', positionWindows);
+        window.addEventListener('resize', positionWindows);
+
+        // handle responsive changes
+        window.addEventListener('resize', ()=>{
+            if(window.matchMedia('(max-width:900px)').matches){
+                windows.forEach(win => { win.style.position='static'; win.style.left=''; win.style.top=''; win.style.transform=''; });
+            } else {
+                windows.forEach(win => {
+                    if(getComputedStyle(win).position === 'static'){
+                        win.style.position='absolute'; win.style.left='50%'; win.style.top='64px'; win.style.transform='translateX(-50%)';
+                    }
+                });
+            }
+        });
+    });
+    </script>
 
     <script>
     // Toggle center menu on small screens using the mini-pill
@@ -364,11 +510,11 @@
 
     <style>
         /* Ensure about and game sections use the same plain background as work */
-        section#about, section#game {
+        /*section#about, section#game {
             background-image: none !important;
             background: #ffffff !important;
             background-color: #ffffff !important;
-        }
+        }*/
     </style>
 
     <!-- Page Header -->
@@ -547,8 +693,17 @@
     </script>
 
         <div class="shape">
-            <svg viewBox="0 0 1500 200">
-                <path d="m 0,240 h 1500.4828 v -71.92164 c 0,0 -286.2763,-81.79324 -743.19024,-81.79324 C 300.37862,86.28512 0,168.07836 0,168.07836 Z"/>
+            <svg viewBox="0 0 1500 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <defs>
+                    <pattern id="dotPattern" patternUnits="userSpaceOnUse" width="28" height="28" patternTransform="translate(0,32)">
+                        <rect width="28" height="28" fill="#ffffff" />
+                        <g stroke="rgba(0,0,0,0.12)" stroke-width="1" stroke-linecap="round">
+                            <line x1="14" y1="12" x2="14" y2="16" />
+                            <line x1="12" y1="14" x2="16" y2="14" />
+                        </g>
+                    </pattern>
+                </defs>
+                <path fill="url(#dotPattern)" style="fill:url(#dotPattern) !important;" d="m 0,240 h 1500.4828 v -71.92164 c 0,0 -286.2763,-81.79324 -743.19024,-81.79324 C 300.37862,86.28512 0,168.07836 0,168.07836 Z"/>
             </svg>
         </div>
 
@@ -559,8 +714,11 @@
     <!-- End Of Page Header -->
 
     <!-- Service Section -->
-    <section  id="about" class="section pt-0">
+    <section  id="about" class="section pt-0 dot-grid">
         <!-- Window-style top bar (like macOS menu bar) -->
+
+        <div class="title-about">build something <span class="accent">different</span></div>
+
         <div class="about-window" aria-hidden="true">
             <div class="window-top">
                 <div class="window-left">
@@ -576,14 +734,14 @@
                     <a class="menu-pill pink" data-shape="diamond" href="#about">r/about</a>
                 </div>
 
-                <div class="window-right-icons">
-                    <!-- battery icon -->
+                <!--<div class="window-right-icons">
+                    
                     <svg class="icon icon-batt" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="1" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"></rect><rect x="20" y="9" width="2" height="6" rx="0.6" fill="currentColor"></rect><rect class="batt-level" x="3" y="8" width="12" height="8" rx="1" fill="currentColor"></rect></svg>
-                    <!-- user / avatar icon -->
+                    
                     <svg class="icon icon-user" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="8" r="3" fill="currentColor"></circle><path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.2"></path></svg>
-                    <!-- search -->
+                    
                     <svg class="icon icon-search" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="4" fill="none" stroke="currentColor" stroke-width="1.4"></circle><path d="M20 20l-4.35-4.35" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
-                    <!-- wifi (fixed icon) -->
+                    
                     <svg class="icon icon-wifi" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1.42 8a16 16 0 0 1 21.16 0" />
                         <path d="M5 12.55a11 11 0 0 1 14 0" />
@@ -591,27 +749,12 @@
                         <path d="M12 20.5h0" stroke-width="2.2" />
                     </svg>
                     <div class="time" id="window-time">10:45</div>
-                </div>
+                </div>-->
             </div>
             <div class="window-body">
+                <div class="container-about">
+                    <img id="img-joysick" src="assets/imgs/Logo-idle2.png" alt=""> 
 
-        <img class = "avatar" src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Round&facialHairType=MoustacheFancy&facialHairColor=Blonde&clotheType=CollarSweater&clotheColor=Gray01&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light'/>
-        <div class="container-about">
-            <img id="img-joysick" src="assets/imgs/Logo-idle2.png" onclick="ChangeImage()" alt="">           
-                <!--<div class="joysick-bubble" role="note"></div>-->
-                <!-- click me callout removed -->
-            <!--<h6 class="section-title text-center">I'm Marco</h6>-->
-
-            <h1>
-                <div class="art-sentence">
-                    <span class="art-line"></span>
-                    <span class="art-line">Let's build <span class="art-accent">together.</span></span>
-                </div>
-                <div class="typing-demo">
-                    I turn your ideas into creative impacts.
-                </div>
-            </h1>
-            <!-- Feature cards (placed around typing demo) -->
                     <div class="cards-overlay" aria-hidden="false">
                         <svg class="cards-lines" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true"></svg>
                         <div class="feature-card" style="--x:5%;  --y:8%;  --r:-3deg">
@@ -681,40 +824,123 @@
                             <span class="feature-card-title">Visual Studio Code</span>
                         </div>
                     </div>
-
-
-            <!--<h6 class="section-title text-center">I'm Marco</h6>-->
-            
-            <!--<h6 class="section-subtitle text-center mb-5 pb-3">I turn your ideas into creative impacts.</h6>-->
+                </div>
             </div>
         </div>
+        
+
+            <!-- duplicated project window (proj 01) -->
+            <div class="about-window proj-window" aria-hidden="false" style="left:48%; top:120px; z-index:14;">
+                <div class="window-top">
+                    <div class="window-left">
+                        <div class="window-logo"><img src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Round&facialHairType=MoustacheFancy&facialHairColor=Blonde&clotheType=CollarSweater&clotheColor=Gray01&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light" alt="proj01" class="window-logo-img"></div>
+                        <div class="window-controls">
+                            <span class="ctrl ctrl-close" data-label="close"></span>
+                            <span class="ctrl ctrl-min" data-label="minimize"></span>
+                            <span class="ctrl ctrl-max" data-label="maximize"></span>
+                        </div>
+                    </div>
+
+                    <div class="window-menu">
+                        <a class="menu-pill green" data-shape="bar" href="#proj01">proj 01</a>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <div class="container-proj01">
+                        <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300&display=swap" rel="stylesheet">
+
+                        <div id="wrap-griddot">
+                            <canvas id="cv"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <!-- marquee moved to its own section below -->
     </section>
+
+    <script>
+    // Add a JS-driven art-style cursor as a fallback when data-URI cursors are not used
+    (function(){
+        if(('ontouchstart' in window) || navigator.maxTouchPoints > 0) return; // skip touch
+        document.documentElement.classList.add('use-art-cursor');
+        const cur = document.createElement('div');
+        cur.className = 'art-cursor';
+        const inner = document.createElement('div'); inner.className='inner';
+        cur.appendChild(inner);
+        document.body.appendChild(cur);
+
+        let mouseX = -9999, mouseY = -9999;
+        let prevX = 0, prevY = 0;
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            // position cursor container
+            cur.style.left = mouseX + 'px';
+            cur.style.top = mouseY + 'px';
+
+            // compute movement delta to create tilt/depth illusion for the label
+            const dx = e.clientX - prevX;
+            const dy = e.clientY - prevY;
+            prevX = e.clientX; prevY = e.clientY;
+
+            // subtle tilt: clamp values
+            const tiltY = Math.max(-12, Math.min(12, -dx * 0.35));
+            const tiltX = Math.max(-8, Math.min(8, dy * 0.25));
+
+            if(cur.classList.contains('has-label')){
+                // flip to left side if near right edge
+                if(e.clientX > window.innerWidth - 220){ labelEl.classList.add('flip'); }
+                else { labelEl.classList.remove('flip'); }
+
+                // apply 3D transform for pill effect
+                labelEl.style.transform = `translateY(-50%) translateZ(8px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+            }
+        }, {passive:true});
+
+        // enlarge cursor on interactive elements and show label if provided
+        const interactive = 'a, button, input, textarea, select, [role="button"], .btn, .btn-talk, .mini-pill, .feature-card-icon, .menu-pill';
+        // label element inside cursor
+        const labelEl = document.createElement('div'); labelEl.className='label'; cur.appendChild(labelEl);
+
+        document.addEventListener('mouseover', e => {
+            const el = e.target && e.target.closest ? e.target.closest(interactive) : null;
+            if(el){
+                cur.classList.add('hover');
+                const label = el.dataset && el.dataset.cursorLabel ? el.dataset.cursorLabel : el.getAttribute('data-cursor-label');
+                if(label){ labelEl.textContent = label; cur.classList.add('has-label'); } else { cur.classList.remove('has-label'); }
+            }
+        });
+        document.addEventListener('mouseout', e => {
+            const el = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest(interactive) : null;
+            // if moving to another interactive element, keep hover state
+            if(!el){ cur.classList.remove('hover'); cur.classList.remove('has-label'); }
+        });
+    })();
+    </script>
     <!-- End OF Service Section -->
 
     <section id="marquee-section" class="section"> 
         <div class="marquee">
             <div class="marquee-track">
                 <div class="scroll">
-                    <h3 class="category">Game Developer</h3>
-                    <h3 class="category">Web Developer</h3>
-                    <h3 class="category">Graphic Design</h3>
-                    <h3 class="category">UI/UX</h3>
-                    <h3 class="category">C#</h3>
-                    <h3 class="category">JavaScript</h3>
-                    <h3 class="category">HTML</h3>
-                    <h3 class="category">CSS</h3>
+                    <h3 class="category">● Game Developer ●</h3>
+                    <h3 class="category">● Web Developer ●</h3>
+                    <h3 class="category">● Graphic Design ●</h3>
+                    <h3 class="category">● UI/UX ●</h3>
+                    <h3 class="category">● C# ●</h3>
+                    <h3 class="category">● JavaScript ●</h3>
+                    <h3 class="category">● HTML ●</h3>
+                    <h3 class="category">● CSS ●</h3>
                 </div>
                 <div class="scroll">
-                    <h3 class="category">Game Developer</h3>
-                    <h3 class="category">Web Developer</h3>
-                    <h3 class="category">Graphic Design</h3>
-                    <h3 class="category">UI/UX</h3>
-                    <h3 class="category">C#</h3>
-                    <h3 class="category">JavaScript</h3>
-                    <h3 class="category">HTML</h3>
-                    <h3 class="category">CSS</h3>
+                    <h3 class="category">● Game Developer ●</h3>
+                    <h3 class="category">● Web Developer ●</h3>
+                    <h3 class="category">● Graphic Design ●</h3>
+                    <h3 class="category">● UI/UX ●</h3>
+                    <h3 class="category">● C# ●</h3>
+                    <h3 class="category">● JavaScript ●</h3>
+                    <h3 class="category">● HTML ●</h3>
+                    <h3 class="category">● CSS ●</h3>
                 </div>
             </div>
         </div>   
@@ -723,7 +949,7 @@
     <style>
         /* Feature cards positioned around entire about section */
         /* ensure the about section is the positioning context and give more vertical room */
-        #about{position:relative; min-height:720px; padding-top:64px; padding-bottom:160px; background-color:#fffaf0; border-top:1px solid rgba(0,0,0,0.04); border-bottom:1px solid rgba(0,0,0,0.04)}
+        #about{position:relative; min-height:720px; padding-top:64px; padding-bottom:160px; border-top:1px solid rgba(0,0,0,0.04); border-bottom:1px solid rgba(0,0,0,0.04)}
 
         /* overlay covers the whole about area so cards can be placed anywhere */
         .cards-overlay{
@@ -785,9 +1011,87 @@
             .feature-card:hover{ animation-play-state:paused }
         }
 
+        /* Load requested fonts for the art-style title */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IS:wght@100..400&display=swap');
+
+        /* Stylized about title: centered both horizontally and vertically inside the #about section */
+        /* Place the title in the visual center so it aligns with the attached art sample */
+        .title-about{
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            width:100%;
+            max-width:1200px;
+            text-align:center;
+            padding:0 22px;
+            box-sizing:border-box;
+            z-index:60;
+            pointer-events:none;
+            /* ensure decorative ribbon and descenders are not clipped */
+            overflow: visible !important;
+            padding-bottom: 18px;
+            font-family:Poppins, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+            color:#111;
+            font-weight:600;
+            font-size:clamp(20px,4.2vw,44px);
+            line-height:1.02;
+            display:block;
+        }
+        /* Use Playwrite IS for the 'different' accent to change its style */
+        .title-about .accent{
+            font-family:'Playwrite IS', 'Great Vibes', 'Playfair Display', cursive;
+            display:inline-block;
+            font-style:italic;
+            font-weight:700;
+            color:#111;
+            font-size:clamp(36px,10vw,120px);
+            line-height:0.86;
+            position:relative;
+            z-index:999;
+            transform:translateY(4px) rotate(-8deg);
+            white-space:nowrap;
+            letter-spacing:0.6px;
+            text-shadow:0 2px 0 rgba(0,0,0,0.03);
+        }
+        /* curved rounded ribbon behind the accent word; positioned relative to the centered title */
+        .title-about .accent::before{
+            content:'';
+            position:absolute;
+            left:50%;
+            /* place ribbon slightly below baseline using bottom so it follows font-size */
+            bottom: -0.18em;
+            transform:translateX(-50%) rotate(-6deg);
+            width:210%;
+            height:40%;
+            background:linear-gradient(90deg,#c9f0b9 0%,#9fe08a 100%);
+            border-radius:999px;
+            z-index:-1; /* sit behind the script text */
+            pointer-events:none;
+            filter:blur(0.3px);
+            box-shadow:0 10px 18px rgba(0,0,0,0.07);
+            transform-origin:center;
+        }
+        @media (max-width:1024px){ .title-about{top:50%} }
+        /* hide previous pseudo; we'll position a JS-driven ribbon for pixel accuracy */
+        .title-about .accent::before{display:none !important}
+        @media (max-width:768px){ .title-about{position:relative;top:0;transform:none;display:block;padding:6px 12px;text-align:center} .title-about .accent{display:inline-block;transform:translateY(2px) rotate(-2deg);font-size:clamp(28px,12vw,72px)} .title-about .accent::before{width:160%;height:46%;top:70%} }
+
         /* Window-style top bar for the about section */
-        .about-window{max-width:940px;margin:64px auto 6px;pointer-events:auto; background:linear-gradient(180deg, rgba(10,10,10,0.9), rgba(6,6,6,0.85)); border-radius:26px; padding:12px}
-        .about-window .window-top{display:flex;align-items:center;justify-content:flex-start;padding:8px 14px;background:transparent;border-radius:22px;color:#fff}
+        /* Position the about window to the left so it doesn't overlap the centered title */
+        .about-window{
+            width: 360px !important;
+            max-width:420px !important;
+            min-width:300px !important;
+            margin:0;
+            pointer-events:auto;
+            background:linear-gradient(180deg, rgba(10,10,10,0.9), rgba(6,6,6,0.85));
+            border-radius:26px; padding:12px;
+            position:absolute; left:6%; top:120px; transform:none;
+            z-index:12; cursor:default;
+        }
+        .about-window .window-top{display:flex;align-items:center;justify-content:flex-start;padding:8px 14px;background:transparent;border-radius:22px;color:#fff;pointer-events:auto;cursor:grab;-webkit-user-select:none;user-select:none}
             .about-window .window-body{position:relative;padding:12px 18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));overflow:visible;display:flex;align-items:center;justify-content:center;min-height:360px}
 
             /* ensure feature-cards and overlay sit above the window body background */
@@ -810,7 +1114,8 @@
 
         /* Responsive: switch layout on smaller viewports */
         @media (max-width:900px){
-            .about-window{max-width:96vw;margin:64px auto 16px;padding:10px;border-radius:18px}
+            /* On small screens revert to normal flow so layout remains usable */
+            .about-window{position:static;width:96%;max-width:none;margin:64px auto 16px;padding:10px;border-radius:18px;transform:none;left:auto;top:auto}
             .about-window .window-top{padding:8px 10px;justify-content:space-between}
             .about-window .window-menu{margin-left:8px}
             .about-window .window-body{flex-direction:column;align-items:center;justify-content:flex-start;min-height:auto;gap:18px;padding:12px}
@@ -880,6 +1185,99 @@
             .about-window .window-menu{gap:10px;font-size:12px}
         }
     </style>
+
+    <style>
+        /* Animated ribbon visuals */
+        .ribbon-anim .ribbon-svg{ width:100%; height:auto; display:block; pointer-events:none }
+        .ribbon-anim .ribbon-bg{ filter:drop-shadow(0 8px 14px rgba(0,0,0,0.07)); }
+        .ribbon-anim .ribbon-curve{ stroke-dasharray: 400; stroke-dashoffset: 400; animation: dash 1.6s ease-out infinite, curveFloat 3.6s ease-in-out infinite; }
+        @keyframes dash{ 0%{ stroke-dashoffset:400 } 60%{ stroke-dashoffset:0 } 100%{ stroke-dashoffset:0 } }
+        @keyframes curveFloat{ 0%{ transform:translateY(0px) } 50%{ transform:translateY(-6px) } 100%{ transform:translateY(0px) } }
+    </style>
+    <script>
+    // JS ribbon: position an actual element under the accent text for precise placement
+    (function(){
+        function ensureRibbon(){
+            const title = document.querySelector('.title-about');
+            if(!title) return;
+            // remove any existing ribbon instances to avoid duplicates
+            document.querySelectorAll('.ribbon-anim, .ribbon-svg').forEach(n => n.parentNode && n.parentNode.removeChild(n));
+            const accent = title.querySelector('.accent');
+            let ribbon = accent && accent.querySelector ? accent.querySelector('.ribbon-anim') : null;
+            if(!ribbon){
+                ribbon = document.createElement('span');
+                ribbon.className = 'ribbon-anim';
+                ribbon.setAttribute('aria-hidden','true');
+                // insert as a sibling before the accent so it can sit behind the text
+                if(accent) title.insertBefore(ribbon, accent);
+                else title.appendChild(ribbon);
+                // ensure accent sits above the ribbon
+                try{ if(accent){ accent.style.position = accent.style.position || 'relative'; accent.style.zIndex = 3; } }catch(e){}
+                // base style for container (position relative to title)
+                Object.assign(ribbon.style,{
+                    position:'absolute',
+                    left:'50%',
+                    top:'50%',
+                    transform:'translate(-50%,0)',
+                    pointerEvents:'none',
+                    zIndex:'0',
+                    display:'block',
+                });
+                // build an inline SVG with two parts: solid pill and animated stroke curve
+                ribbon.innerHTML = `
+                    <svg class="ribbon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 120" preserveAspectRatio="xMidYMid meet" style="overflow:visible;display:block">
+                        <path class="ribbon-curve" d="M20,66 C180,6 420,6 580,66" stroke="url(#rgrad)" stroke-width="26" stroke-linecap="round" fill="none" stroke-opacity="1" />
+                        <defs>
+                            <linearGradient id="rgrad" x1="0%" x2="100%">
+                                <stop offset="0%" stop-color="#b3dbff" />
+                                <stop offset="100%" stop-color="#2f7fff" />
+                            </linearGradient>
+                        </defs>
+                    </svg>`;
+            }
+            return ribbon;
+        }
+
+        function placeRibbon(){
+            const title = document.querySelector('.title-about');
+            const accent = title && title.querySelector('.accent');
+            if(!title || !accent) return;
+            const ribbon = ensureRibbon();
+            const tRect = title.getBoundingClientRect();
+            const aRect = accent.getBoundingClientRect();
+            // compute relative center of accent inside title
+            const centerX = aRect.left + aRect.width/2 - tRect.left;
+            // position slightly below the accent baseline (tune offsets for descenders)
+            // move up more by subtracting a larger fraction of the accent height
+            const below = (aRect.bottom - tRect.top) + (aRect.height * 0.06) - (aRect.height * 0.5);
+            // fit ribbon length to the accent width (small padding), and set height from accent
+            const width = Math.max(aRect.width * 1.15, 80);
+            const height = Math.max(Math.round(aRect.height * 0.6), 12);
+            ribbon.style.left = Math.round(centerX) + 'px';
+            ribbon.style.top = Math.round(below) + 'px';
+            ribbon.style.width = Math.round(width) + 'px';
+            ribbon.style.height = Math.round(height) + 'px';
+            ribbon.style.transform = 'translateX(-50%) rotate(-6deg)';
+            // adjust stroke width of the SVG curve to match the accent size
+            try{
+                const path = ribbon.querySelector('.ribbon-curve');
+                if(path){
+                    const strokeW = Math.max(Math.round(aRect.height * 0.6), 8);
+                    path.setAttribute('stroke-width', strokeW);
+                    // adjust dash animation length to path length if available
+                    const len = path.getTotalLength ? Math.round(path.getTotalLength()) : 400;
+                    path.style.strokeDasharray = len;
+                    path.style.strokeDashoffset = len;
+                }
+            }catch(e){}
+        }
+
+        window.addEventListener('load', ()=>{ setTimeout(placeRibbon,60); });
+        window.addEventListener('resize', ()=>{ setTimeout(placeRibbon,60); });
+        // reposition after fonts load for accurate metrics
+        if(document.fonts && document.fonts.ready){ document.fonts.ready.then(()=> setTimeout(placeRibbon,60)); }
+    })();
+    </script>
 
     <script>
     // Move header JOYSICK image and subtitle down to replace avatar
